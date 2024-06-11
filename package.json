@@ -1,0 +1,23 @@
+{
+  "name": "refactoring-cpf",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "directories": {
+    "test": "test"
+  },
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [],
+  "author": "ThainanST <66067872+ThainanST@users.noreply.github.com>",
+  "license": "ISC",
+  "repository": "git@github.com:ThainanST/refactoring-cpf.git",
+  "dependencies": {
+    "@types/jest": "^29.5.12",
+    "jest": "^29.7.0",
+    "ts-jest": "^29.1.4",
+    "ts-node": "^10.9.2",
+    "typescript": "^5.4.5"
+  }
+}

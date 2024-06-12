@@ -1,0 +1,19 @@
+Para criar o banco de dados
+
+
+
+psql -U postgres      # acessar o PostgreSQL como o superusuário postgres
+CREATE USER thain WITH PASSWORD '123456';   # Criar o Usuário thain
+CREATE DATABASE app;  # crie o banco de dados app
+\l                    # listar todos os bancos de dados
+\q                    # Sair do Ambiente psql
+
+psql -d app -f create.sql
+
+
+Comandos
+psql -d <database> -U <username>
+\c <database>             # Connectar ao banco
+\dt <schema>.*            # Lista tabelas de um <schema>
+\dn                       # Listar schemas
+\d <schema>.<tableName>   # Mostrar detalhes de uma <tabela> de um <schema>

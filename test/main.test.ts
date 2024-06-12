@@ -19,9 +19,9 @@ test("Deve fazer pedido com 3 produtos", async function () {
     const input = {
         cpf: "987.654.321-00",
         items: [
-            { id: 1, quantity: 1 },
-            { id: 2, quantity: 1 },
-            { id: 3, quantity: 3 }
+            { id_product: 1, quantity: 1 },
+            { id_product: 2, quantity: 1 },
+            { id_product: 3, quantity: 3 }
         ]
     };
     const response = await axios.post("http://localhost:3000/checkout", input);
@@ -33,9 +33,9 @@ test("Deve fazer pedido com produto inexistente", async function () {
     const input = {
         cpf: "987.654.321-00",
         items: [
-            { id: 1, quantity: 1 },
-            { id: 4, quantity: 1 },
-            { id: 3, quantity: 3 }
+            { id_product: 1, quantity: 1 },
+            { id_product: 4, quantity: 1 },
+            { id_product: 3, quantity: 3 }
         ]
     };
     const response = await axios.post("http://localhost:3000/checkout", input);
@@ -48,9 +48,9 @@ test("Deve fazer pedido com 3 produtos e aplicar cupom de desconto", async funct
     const input = {
         cpf: "987.654.321-00",
         items: [
-            { id: 1, quantity: 1 },
-            { id: 2, quantity: 1 },
-            { id: 3, quantity: 3 }
+            { id_product: 1, quantity: 1 },
+            { id_product: 2, quantity: 1 },
+            { id_product: 3, quantity: 3 }
         ],
         coupon: "VALE20"
     };
@@ -63,9 +63,9 @@ test("Não deve aplicar cupom de desconto inválido", async function () {
     const input = {
         cpf: "987.654.321-00",
         items: [
-            { id: 1, quantity: 1 },
-            { id: 2, quantity: 1 },
-            { id: 3, quantity: 3 }
+            { id_product: 1, quantity: 1 },
+            { id_product: 2, quantity: 1 },
+            { id_product: 3, quantity: 3 }
         ],
         coupon: "INVALIDO"
     };

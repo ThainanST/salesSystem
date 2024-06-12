@@ -5,9 +5,9 @@ const app = express();
 app.use(express.json());
 
 const products = [
-    {id: 1, description: "A", price: 1000},
-    {id: 2, description: "B", price: 5000},
-    {id: 3, description: "C", price: 30}
+    {id_product: 1, description: "A", price: 1000},
+    {id_product: 2, description: "B", price: 5000},
+    {id_product: 3, description: "C", price: 30}
 ];
 
 const coupons = [
@@ -21,7 +21,7 @@ app.post('/checkout', (req, res) => {
     if (isCpfValid) {
         let total = 0;
         for (let item of req.body.items) {
-            const product = products.find(prod => prod.id === item.id);
+            const product = products.find(prod => prod.id_product === item.id_product);
             if (product) {
                 total += product.price * item.quantity;
             }

@@ -1,7 +1,11 @@
+rodar testes
+    npx jest --watchAll
+
+rodar server
+    npx nodemon src/main.ts
+
+
 Para criar o banco de dados
-
-
-
 psql -U postgres      # acessar o PostgreSQL como o superusuário postgres
 CREATE USER thain WITH PASSWORD '123456';   # Criar o Usuário thain
 CREATE DATABASE app;  # crie o banco de dados app
@@ -17,3 +21,4 @@ psql -d <database> -U <username>
 \dt <schema>.*            # Lista tabelas de um <schema>
 \dn                       # Listar schemas
 \d <schema>.<tableName>   # Mostrar detalhes de uma <tabela> de um <schema>
+

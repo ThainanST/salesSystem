@@ -1,5 +1,5 @@
 drop table sales.products;
-drop table sales.cupons;
+drop table sales.coupons;
 drop schema sales;
 
 create schema sales;
@@ -12,7 +12,8 @@ create table sales.products (
 
 create table sales.coupons (
     code text primary key,
-    discount numeric
+    discount numeric,
+    expire_date timestamp
 );
 
 insert into sales.products (id_product, description, price) values
@@ -21,7 +22,7 @@ insert into sales.products (id_product, description, price) values
     (3, 'C', 30);
 
 
-insert into sales.coupons (code, discount) values
-    ('VALE20', 0.2),
-    ('VALE30', 0.3),
-    ('VALE40', 0.4);
+insert into sales.coupons (code, discount, expire_date) values
+    ('VALE20', 0.2, '2024-10-01T10:00:00'),
+    ('VALE20_EXPIRED', 0.2, '2024-04-01T10:00:00'),
+    ('VALE40', 0.4, '2024-10-01T10:00:00');

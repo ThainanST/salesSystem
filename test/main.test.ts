@@ -26,7 +26,7 @@ test("Deve fazer pedido com 3 produtos", async function () {
     };
     const response = await axios.post("http://localhost:3000/checkout", input);
     const output = response.data;
-    expect(output).toEqual(6090);
+    expect(output.total).toEqual(6090);
 });
 
 test("Deve fazer pedido com produto inexistente", async function () {
@@ -56,7 +56,7 @@ test("Deve fazer pedido com 3 produtos e aplicar cupom de desconto", async funct
     };
     const response = await axios.post("http://localhost:3000/checkout", input);
     const output = response.data;
-    expect(output).toEqual(4872);
+    expect(output.total).toEqual(4872);
 });
 
 test("Não deve aplicar cupom de desconto inválido", async function () {
@@ -73,4 +73,47 @@ test("Não deve aplicar cupom de desconto inválido", async function () {
     expect(response.status).toBe(422);
     const output = response.data;
     expect(output.message).toBe("Coupon not found");
+});
+
+test("Não deve aplicar cupom de desconto expirado", async function () {
+    const input = {
+        cpf: "987.654.321-00",
+        items: [
+            { id_product: 1, quantity: 1 },
+            { id_product: 2, quantity: 1 },
+            { id_product: 3, quantity: 3 }
+        ],
+        coupon: "VALE20_EXPIRED"
+    };
+    const response = await axios.post("http://localhost:3000/checkout", input);
+    const output = response.data;
+    expect(output.total).toEqual(6090);
+    expect(output.message).toBe("Coupon expired");
+});
+
+test("Não deve fazer pedido com quantidade negativa", async function () {
+    const input = {
+        cpf: "987.654.321-00",
+        items: [
+            { id_product: 1, quantity: -1 }
+        ]
+    };
+    const response = await axios.post("http://localhost:3000/checkout", input);
+    expect(response.status).toBe(422);
+    const output = response.data;
+    expect(output.message).toBe("Quantity must be positive");
+});
+
+test("Não deve fazer pedido item duplicado", async function () {
+    const input = {
+        cpf: "987.654.321-00",
+        items: [
+            { id_product: 1, quantity: 1 },
+            { id_product: 1, quantity: 1 }
+        ]
+    };
+    const response = await axios.post("http://localhost:3000/checkout", input);
+    expect(response.status).toBe(422);
+    const output = response.data;
+    expect(output.message).toBe("Duplicate products");
 });

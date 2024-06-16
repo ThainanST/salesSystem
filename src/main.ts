@@ -29,11 +29,24 @@ const connection = pgp()(`postgres://${postgresUser}:${postgresPassword}@${postg
 app.post('/checkout', async function (req, res) {
     const isCpfValid = validate(req.body.cpf);
     if (isCpfValid) {
+        const products = req.body.items;
+        const productsId = products.map( (prod: any) => prod.id_product);
+        const productsIdSet = new Set(productsId);
+        if (productsId.length !== productsIdSet.size) {
+            return res.status(422).json({
+                message: 'Duplicate products'
+            });
+        }
         let total = 0;
-        for (let item of req.body.items) {
+        for (let item of products) {
             // const product = products.find(prod => prod.id_product === item.id_product);
             const [product] = await connection.query("SELECT * FROM sales.products WHERE id_product = $1;", [item.id_product]);
             if (product) {
+                if (item.quantity <= 0) {
+                    return res.status(422).json({
+                        message: 'Quantity must be positive'
+                    });
+                }
                 total += parseFloat(product.price) * item.quantity;
             }
             else {
@@ -46,16 +59,28 @@ app.post('/checkout', async function (req, res) {
             const myCuponCode = req.body.coupon;
             // const objCoupon = coupons.find(cup => cup.code === myCuponCode);
             const [objCoupon] = await connection.query("SELECT * FROM sales.coupons WHERE code = $1;", [myCuponCode]);
-            if (objCoupon) {
-                total = total * (1 - objCoupon.discount );
+            const today = new Date();
+            if (objCoupon  ) {
+                if (today < objCoupon.expire_date.getTime() ) {
+                    total = total * (1 - objCoupon.discount );
+                }
+                else {
+                    return res.status(422).json({
+                        total: total,
+                        message: 'Coupon expired'
+                    });
+                }
             }
             else {
                 return res.status(422).json({
+                    total: total,
                     message: 'Coupon not found'
                 });
             }
         }
-        res.json(total);
+        res.json({
+            total: total
+        });
     }
     else {
         return res.status(422).json({ 

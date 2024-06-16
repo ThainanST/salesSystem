@@ -38,6 +38,10 @@ app.post('/checkout', async function (req, res) {
             });
         }
         let total = 0;
+        let freight = 0;
+        let itemFreight = 0;
+        let volume = 0;
+        let density = 0;
         for (let item of products) {
             // const product = products.find(prod => prod.id_product === item.id_product);
             const [product] = await connection.query("SELECT * FROM sales.products WHERE id_product = $1;", [item.id_product]);
@@ -48,6 +52,10 @@ app.post('/checkout', async function (req, res) {
                     });
                 }
                 total += parseFloat(product.price) * item.quantity;
+                volume = parseFloat(product.width) * parseFloat(product.height) * parseFloat(product.length) / 1000000;
+                density = parseFloat(product.weight) / volume;
+                itemFreight = 1000 * volume * (density /100);
+                freight += itemFreight >= 10 ? itemFreight : 10;
             }
             else {
                 return res.status(422).json({
@@ -65,21 +73,27 @@ app.post('/checkout', async function (req, res) {
                     total = total * (1 - objCoupon.discount );
                 }
                 else {
+                    total += freight;
                     return res.status(422).json({
                         total: total,
+                        freight: freight,
                         message: 'Coupon expired'
                     });
                 }
             }
             else {
+                total += freight;
                 return res.status(422).json({
                     total: total,
+                    freight: freight,
                     message: 'Coupon not found'
                 });
             }
         }
+        total += freight;
         res.json({
-            total: total
+            total: total,
+            freight: freight
         });
     }
     else {

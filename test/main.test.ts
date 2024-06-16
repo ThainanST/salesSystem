@@ -26,7 +26,7 @@ test("Deve fazer pedido com 3 produtos", async function () {
     };
     const response = await axios.post("http://localhost:3000/checkout", input);
     const output = response.data;
-    expect(output.total).toEqual(6090);
+    expect(output.total).toEqual(6350);
 });
 
 test("Deve fazer pedido com produto inexistente", async function () {
@@ -56,7 +56,7 @@ test("Deve fazer pedido com 3 produtos e aplicar cupom de desconto", async funct
     };
     const response = await axios.post("http://localhost:3000/checkout", input);
     const output = response.data;
-    expect(output.total).toEqual(4872);
+    expect(output.total).toEqual(5132);
 });
 
 test("Não deve aplicar cupom de desconto inválido", async function () {
@@ -87,7 +87,7 @@ test("Não deve aplicar cupom de desconto expirado", async function () {
     };
     const response = await axios.post("http://localhost:3000/checkout", input);
     const output = response.data;
-    expect(output.total).toEqual(6090);
+    expect(output.total).toEqual(6350);
     expect(output.message).toBe("Coupon expired");
 });
 
@@ -116,4 +116,30 @@ test("Não deve fazer pedido item duplicado", async function () {
     expect(response.status).toBe(422);
     const output = response.data;
     expect(output.message).toBe("Duplicate products");
+});
+
+test("Deve fazer pedido e calcular o frete", async function () {
+    const input = {
+        cpf: "987.654.321-00",
+        items: [
+            { id_product: 1, quantity: 1 }
+        ]
+    };
+    const response = await axios.post("http://localhost:3000/checkout", input);
+    const output = response.data;
+    expect(output.freight).toEqual(30);
+    expect(output.total).toEqual(1030);
+});
+
+test("Deve fazer pedido e calcular o frete com valor minimo", async function () {
+    const input = {
+        cpf: "987.654.321-00",
+        items: [
+            { id_product: 3, quantity: 1 }
+        ]
+    };
+    const response = await axios.post("http://localhost:3000/checkout", input);
+    const output = response.data;
+    expect(output.freight).toEqual(10);
+    expect(output.total).toEqual(40);
 });

@@ -7,7 +7,11 @@ create schema sales;
 create table sales.products (
     id_product integer primary key,
     description text,
-    price numeric
+    price numeric,
+    width integer,
+    height integer,
+    length integer,
+    weight numeric
 );
 
 create table sales.coupons (
@@ -16,10 +20,10 @@ create table sales.coupons (
     expire_date timestamp
 );
 
-insert into sales.products (id_product, description, price) values
-    (1, 'A', 1000),
-    (2, 'B', 5000),
-    (3, 'C', 30);
+insert into sales.products (id_product, description, price, width, height, length, weight) values
+    (1, 'A', 1000, 100, 30, 10, 3),
+    (2, 'B', 5000, 50,  50, 50, 22),
+    (3, 'C', 30,   10,  10, 10, 0.9);
 
 
 insert into sales.coupons (code, discount, expire_date) values

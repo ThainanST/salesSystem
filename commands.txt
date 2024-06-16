@@ -19,10 +19,11 @@ Comandos
 psql -d <database> -U <username>
 \c <database>             # Connectar ao banco
 \dt <schema>.*            # Lista tabelas de um <schema>
-\dn                       # Listar schemas
+\dn                       # Listgit ar schemas
 \d <schema>.<tableName>   # Mostrar detalhes de uma <tabela> de um <schema>
 
 
 rabittMQ
 
 yarn add amqplib @types/amqplib
+npx ts-node src/queue_producer.ts

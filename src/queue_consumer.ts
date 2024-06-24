@@ -8,6 +8,8 @@ async function init() {
         const input = JSON.parse(message.content.toString());
 
         // TODO: Implement the checkout logic here
+        console.log(input);
+        channel.ack(message);
     });
 }
 

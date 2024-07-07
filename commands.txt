@@ -27,3 +27,4 @@ rabittMQ
 
 yarn add amqplib @types/amqplib
 npx ts-node src/queue_producer.ts
+npx ts-node src/queue_consumer.ts

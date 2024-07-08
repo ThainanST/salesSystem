@@ -1,4 +1,5 @@
 import amqp from "amqplib";
+import { checkout } from "./Checkout";
 
 async function init() {
     const connection = await amqp.connect("amqp://localhost");
@@ -6,9 +7,11 @@ async function init() {
     await channel.assertQueue("checkout", { durable: true });
     await channel.consume("checkout", async function (message: any) {
         const input = JSON.parse(message.content.toString());
-
-        // TODO: Implement the checkout logic here
-        console.log(input);
+        try {
+            const output = await checkout(input);
+        } catch (error: any) {
+            throw new Error(error.message);
+        }
         channel.ack(message);
     });
 }

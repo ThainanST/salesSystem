@@ -1,11 +1,19 @@
 import { validate } from './CpfValidator';
 import CouponData from './CouponData';
 import ProductData from './ProductData';
+import CurrencyGatewayRandom from './CurrencyGatewayRandom';
 import CurrencyGateway from './CurrencyGateway';
+import Mailer from './Mailer';
+import MailerConsole from './MailerConsole';
 
 export default class Checkout {
 
-    constructor (readonly productData: ProductData, readonly couponData: CouponData) {
+    constructor (
+        readonly productData: ProductData,
+        readonly couponData: CouponData,
+        readonly currencyGateway: CurrencyGateway = new CurrencyGatewayRandom(),
+        readonly mailer: Mailer = new MailerConsole(),
+    ) {
 
     }
 
@@ -25,8 +33,7 @@ export default class Checkout {
         let itemFreight = 0;
         let volume = 0;
         let density = 0;
-        const currencyGateway = new CurrencyGateway();
-        const currencies: any = await currencyGateway.getCurrencies();
+        const currencies: any = await this.currencyGateway.getCurrencies();
         for (let item of products) {
             const product = await this.productData.getProductById(item.id_product);
             if (product) {
@@ -66,7 +73,9 @@ export default class Checkout {
             }
         }
         total += freight;
-
+        if (input.email) {
+            this.mailer.send(input.email, 'Pedido realizado com sucesso', 'Obrigado por comprar conosco');
+        }
         return {
             total: total,
             freight: freight
@@ -75,10 +84,9 @@ export default class Checkout {
     
 }
 
-
-
 type Input = {
     cpf: string;
     items: {id_product: number, quantity: number}[];
     coupon?: string;
+    email?: string;
 }

@@ -4,7 +4,9 @@ import ProductData from "../src/ProductData";
 import CouponData from "../src/CouponData";
 import CouponDataDatabase from "../src/CouponDataDatabase";
 import ProductDataDatabase from "../src/ProductDataDatabase";
-import CurrencyGateway from "../src/CurrencyGateway";
+import CurrencyGateway from "../src/CurrencyGatewayRandom";
+import MailerConsole from "../src/MailerConsole";
+import Mailer from "../src/Mailer";
 
 const productData: ProductData = {
     async getProductById(id_product: number): Promise<any> {
@@ -60,12 +62,13 @@ test("Deve fazer pedido com 3 produtos", async function () {
     expect(output.total).toEqual(6350);
 });
 
-test("Deve fazer pedido com 4 produtos e moedas diferentes", async function () {
+test("Deve fazer pedido com 4 produtos e moedas diferentes com stub e spy", async function () {
     const currencyGatewayStub = sinon.stub(CurrencyGateway.prototype,'getCurrencies').resolves({
         "BRL": 1.0,
         "USD": 3.0,
         "EUR": 6.5
     });
+    const mailerSpy = sinon.spy(MailerConsole.prototype, 'send');
 
     const input = {
         cpf: "987.654.321-00",
@@ -74,12 +77,98 @@ test("Deve fazer pedido com 4 produtos e moedas diferentes", async function () {
             { id_product: 2, quantity: 1 },
             { id_product: 3, quantity: 3 },
             { id_product: 4, quantity: 1 }
-        ]
+        ],
+        email: "thainan@mail.com",
     };
     // const productData = new ProductDataDatabase();
     // const couponData = new CouponDataDatabase();
     const checkout = new Checkout(productData, couponData);
     const output = await checkout.execute(input);
     expect(output.total).toEqual(6680);
+    expect(mailerSpy.calledOnce).toBeTruthy();
+    expect(mailerSpy.calledWith(
+        "thainan@mail.com",
+        "Pedido realizado com sucesso",
+        "Obrigado por comprar conosco"
+    )).toBeTruthy();
+
     currencyGatewayStub.restore();
+    mailerSpy.restore();
+});
+
+test("Deve fazer pedido com 4 produtos e moedas diferentes com mock", async function () {
+    const currencyGatewayMock = sinon.mock(CurrencyGateway.prototype);
+    currencyGatewayMock.expects('getCurrencies')
+        .once()
+        .resolves({
+            "BRL": 1.0,
+            "USD": 3.0,
+            "EUR": 6.5
+        });
+
+    const mailerMock = sinon.mock(MailerConsole.prototype);
+    mailerMock.expects('send')
+        .once()
+        .withArgs("thainan@mail.com", "Pedido realizado com sucesso", "Obrigado por comprar conosco");
+
+    const input = {
+        cpf: "987.654.321-00",
+        items: [
+            { id_product: 1, quantity: 1 },
+            { id_product: 2, quantity: 1 },
+            { id_product: 3, quantity: 3 },
+            { id_product: 4, quantity: 1 }
+        ],
+        email: "thainan@mail.com",
+    };
+    // const productData = new ProductDataDatabase();
+    // const couponData = new CouponDataDatabase();
+    const checkout = new Checkout(productData, couponData);
+    const output = await checkout.execute(input);
+    expect(output.total).toEqual(6680);
+    currencyGatewayMock.verify();
+    mailerMock.verify();
+
+    currencyGatewayMock.restore();
+    mailerMock.restore();
+});
+
+test("Deve fazer pedido com 4 produtos e moedas diferentes com fake", async function () {
+    const log: any = [];
+    const mailerFake: Mailer = {
+        async send(email: string, subject: string, message: string) {
+            // console.log(email, subject, message);
+            log.push({ email, subject, message });
+        }
+    }
+
+    const currencyGatewayFake: CurrencyGateway = {
+        async getCurrencies(): Promise<any> {
+            return {
+                "BRL": 1.0,
+                "USD": 3.0,
+                "EUR": 6.5
+            };
+        }
+    }
+
+    const input = {
+        cpf: "987.654.321-00",
+        items: [
+            { id_product: 1, quantity: 1 },
+            { id_product: 2, quantity: 1 },
+            { id_product: 3, quantity: 3 },
+            { id_product: 4, quantity: 1 }
+        ],
+        email: "thainan@mail.com",
+    };
+    // const productData = new ProductDataDatabase();
+    // const couponData = new CouponDataDatabase();
+    const checkout = new Checkout(productData, couponData, currencyGatewayFake, mailerFake);
+    const output = await checkout.execute(input);
+    expect(output.total).toEqual(6680);
+    expect(log).toHaveLength(1);
+    expect(log[0].email).toBe("thainan@mail.com");
+    expect(log[0].subject).toBe("Pedido realizado com sucesso");
+    expect(log[0].message).toBe("Obrigado por comprar conosco");
 });

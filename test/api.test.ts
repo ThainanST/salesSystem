@@ -34,7 +34,7 @@ test("Deve fazer pedido com produto inexistente", async function () {
         cpf: "987.654.321-00",
         items: [
             { id_product: 1, quantity: 1 },
-            { id_product: 4, quantity: 1 },
+            { id_product: 99, quantity: 1 },
             { id_product: 3, quantity: 3 }
         ]
     };

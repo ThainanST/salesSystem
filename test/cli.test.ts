@@ -43,7 +43,7 @@ test("Deve fazer pedido com 3 produtos", async function () {
 test("Nao deve fazer pedido com produto inexistente", async function () {
     let output: any = await handleCommand("set-cpf 987.654.321-00");
     output = await handleCommand("add-item 1 1");
-    output = await handleCommand("add-item 4 1");
+    output = await handleCommand("add-item 99 1");
     output = await handleCommand("add-item 3 3");
     output = await handleCommand("checkout");
     expect(output.message).toEqual("Product not found"); 

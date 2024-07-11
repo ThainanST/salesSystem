@@ -1,4 +1,6 @@
-import { checkout } from "./Checkout";
+import Checkout from "./Checkout";
+import CouponDataDatabase from "./CouponDataDatabase";
+import ProductDataDatabase from "./ProductDataDatabase";
 
 let input: any = {
     items: [],
@@ -27,8 +29,11 @@ export async function handleCommand(command: string) {
         };
     }
     if (command.startsWith("checkout") ) {
+        const productData = new ProductDataDatabase();
+        const couponData = new CouponDataDatabase();
         try {
-            const output = await checkout(input);
+            const checkout = new Checkout(productData, couponData);
+            const output = await checkout.execute(input);
             return output;
         } catch (error: any) {
             return { 

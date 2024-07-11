@@ -28,3 +28,13 @@ rabittMQ
 yarn add amqplib @types/amqplib
 npx ts-node src/queue_producer.ts
 npx ts-node src/queue_consumer.ts
+
+
+Biblioteca para testes que fornecem funcionalidades para criar espiões (spies), stubs e mocks.
+JavaScript (sinon): 
+    yarn add @types/sinon
+    npm install sinon --save-dev  **Funcionou
+    "pacotes para TypeScript que não foram originalmente escritas em TypeScript."
+Python (unittest.mock): 
+C# (Moq)
+

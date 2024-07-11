@@ -11,7 +11,8 @@ create table sales.products (
     width integer,
     height integer,
     length integer,
-    weight numeric
+    weight numeric,
+    currency text
 );
 
 create table sales.coupons (
@@ -20,10 +21,11 @@ create table sales.coupons (
     expire_date timestamp
 );
 
-insert into sales.products (id_product, description, price, width, height, length, weight) values
-    (1, 'A', 1000, 100, 30, 10, 3),
-    (2, 'B', 5000, 50,  50, 50, 22),
-    (3, 'C', 30,   10,  10, 10, 0.9);
+insert into sales.products (id_product, description, price, width, height, length, weight, currency) values
+    (1, 'A', 1000, 100, 30, 10, 3, 'BRL'),
+    (2, 'B', 5000, 50,  50, 50, 22, 'BRL'),
+    (3, 'C', 30,   10,  10, 10, 0.9, 'BRL'),
+    (4, 'D', 100,  100, 30, 10, 3, 'USD');
 
 
 insert into sales.coupons (code, discount, expire_date) values

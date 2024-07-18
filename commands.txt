@@ -19,6 +19,22 @@ Comandos
 psql -d <database> -U <username>
 \c <database>             # Connectar ao banco
 \dt <schema>.*            # Lista tabelas de um <schema>
-\dn                       # Listar schemas
+\dn                       # Listgit ar schemas
 \d <schema>.<tableName>   # Mostrar detalhes de uma <tabela> de um <schema>
+
+
+rabittMQ
+
+yarn add amqplib @types/amqplib
+npx ts-node src/queue_producer.ts
+npx ts-node src/queue_consumer.ts
+
+
+Biblioteca para testes que fornecem funcionalidades para criar espiões (spies), stubs e mocks.
+JavaScript (sinon): 
+    yarn add @types/sinon
+    npm install sinon --save-dev  **Funcionou
+    "pacotes para TypeScript que não foram originalmente escritas em TypeScript."
+Python (unittest.mock): 
+C# (Moq)
 

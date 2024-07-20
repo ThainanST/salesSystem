@@ -1,7 +1,3 @@
-drop table sales.products;
-drop table sales.coupons;
-drop schema sales;
-
 create schema sales;
 
 create table sales.products (
@@ -32,3 +28,25 @@ insert into sales.coupons (code, discount, expire_date) values
     ('VALE20', 0.2, '2024-10-01T10:00:00'),
     ('VALE20_EXPIRED', 0.2, '2024-04-01T10:00:00'),
     ('VALE40', 0.4, '2024-10-01T10:00:00');
+
+
+create table sales.order (
+    id_order serial primary key,
+    code text,
+    coupon_code text,
+    coupon_discount numeric,
+    cpf text,
+    email text,
+    issue_date timestamp,
+    freight numeric,
+    total numeric,
+    sequence integer
+);
+
+create table sales.order_items (
+    id_order integer references sales.order(id_order),
+    id_product integer references sales.products(id_product),
+    price numeric,
+    quantity integer,
+    primary key (id_order, id_product)
+);

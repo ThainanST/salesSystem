@@ -89,6 +89,12 @@ preço: R$400,00 (1000 * 1 * (40/100))
 3. Deve simular o frete (caso de uso)
 4. Deve validar o Cupom de desconto (caso de uso)
 
+### O que fazer
+1. Implementar o save da order no banco de dados (Checkout)
+2. Implementar a geração do código do pedido (AAAAPPPPPPPP)
+3. Implementar o caso de uso simular frete
+4. Implementar o caso de uso validar cupom de desconto
+
 ### Considere
 - O código do pedido é formado por AAAAPPPPPPPP onde AAAA representa o ano e o PPPPPPPP representa um sequencial do pedido
 

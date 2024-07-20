@@ -7,6 +7,8 @@ import ProductDataDatabase from "../src/ProductDataDatabase";
 import CurrencyGateway from "../src/CurrencyGatewayRandom";
 import MailerConsole from "../src/MailerConsole";
 import Mailer from "../src/Mailer";
+import OrderDataDatabase from '../src/OrderDataDatabase';
+import OrderData from '../src/OrderData';
 
 const productData: ProductData = {
     async getProductById(id_product: number): Promise<any> {
@@ -164,11 +166,35 @@ test("Deve fazer pedido com 4 produtos e moedas diferentes com fake", async func
     };
     // const productData = new ProductDataDatabase();
     // const couponData = new CouponDataDatabase();
-    const checkout = new Checkout(productData, couponData, currencyGatewayFake, mailerFake);
+    const orderData = new OrderDataDatabase();
+    const checkout = new Checkout(productData, couponData, orderData, currencyGatewayFake, mailerFake);
     const output = await checkout.execute(input);
     expect(output.total).toEqual(6680);
     expect(log).toHaveLength(1);
     expect(log[0].email).toBe("thainan@mail.com");
     expect(log[0].subject).toBe("Pedido realizado com sucesso");
     expect(log[0].message).toBe("Obrigado por comprar conosco");
+});
+
+test("Deve fazer pedido com 3 produtos com código do pedido", async function () {
+    const input = {
+        cpf: "987.654.321-00",
+        items: [
+            { id_product: 1, quantity: 1 },
+            { id_product: 2, quantity: 1 },
+            { id_product: 3, quantity: 3 }
+        ]
+    };
+    const orderDataFake: OrderData = {
+        async save(order: any): Promise<void> {},
+        async getOrderByCpf(cpf: string): Promise<any> {},
+        async count(): Promise<number> {
+            return 1;
+        }
+    }
+
+    const checkout = new Checkout(productData, couponData, orderDataFake);
+    const output = await checkout.execute(input);
+    expect(output.total).toEqual(6350);
+    expect(output.code).toBe('202400000001');
 });

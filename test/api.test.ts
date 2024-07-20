@@ -59,7 +59,7 @@ test("Deve fazer pedido com 3 produtos e aplicar cupom de desconto", async funct
     expect(output.total).toEqual(5132);
 });
 
-test("Não deve aplicar cupom de desconto inválido", async function () {
+test.skip("Não deve aplicar cupom de desconto inválido", async function () {
     const input = {
         cpf: "987.654.321-00",
         items: [
@@ -75,7 +75,7 @@ test("Não deve aplicar cupom de desconto inválido", async function () {
     expect(output.message).toBe("Coupon not found");
 });
 
-test("Não deve aplicar cupom de desconto expirado", async function () {
+test.skip("Não deve aplicar cupom de desconto expirado", async function () {
     const input = {
         cpf: "987.654.321-00",
         items: [

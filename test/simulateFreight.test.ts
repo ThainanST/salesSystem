@@ -4,7 +4,7 @@ import SimulateFreight from "../src/SimulateFreight";
 test('Deve simular frete para um pedido', async function () {
     const input = { 
         items: [
-            {id_product: 1, quantity: 1}
+            {idProduct: 1, quantity: 1}
         ]
     };
     const productData = new ProductDataDatabase();

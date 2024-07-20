@@ -16,8 +16,8 @@ export async function handleCommand(command: string) {
     }
     if (command.startsWith("add-item")) {
         const params = command.replace("add-item ", "");
-        const [id_product, quantity] = params.split(" ");
-        input.items.push({ id_product, quantity });
+        const [idProduct, quantity] = params.split(" ");
+        input.items.push({ idProduct, quantity });
         return input;
     }
     if (command.startsWith("show-input")) {

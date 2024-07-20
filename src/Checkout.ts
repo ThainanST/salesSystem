@@ -8,6 +8,7 @@ import MailerConsole from './MailerConsole';
 import OrderDataDatabase from './OrderDataDatabase';
 import FreightCalculator from './FreightCalculator';
 import ValidateCoupon from './ValidateCoupon';
+import OrderCode from './OrderCode';
 
 export default class Checkout {
 
@@ -27,17 +28,17 @@ export default class Checkout {
             throw new Error('Invalid cpf');
         }
         const products = input.items;
-        const productsId = products.map( (prod: any) => prod.id_product);
+        const productsId = products.map( (prod: any) => prod.idProduct);
         const productsIdSet = new Set(productsId);
         if (productsId.length !== productsIdSet.size) {
-            throw new Error('Duplicate products');
+            throw new Error('Duplicated products');
         }
         let total = 0;
         let freight = 0;
         const freightCalculator = new FreightCalculator();
         const currencies: any = await this.currencyGateway.getCurrencies();
         for (let item of products) {
-            const product = await this.productData.getProductById(item.id_product);
+            const product = await this.productData.getProductById(item.idProduct);
             if (product) {
                 if (item.quantity <= 0) {
                     throw new Error('Quantity must be positive');
@@ -54,39 +55,19 @@ export default class Checkout {
             if (coupon && !coupon.isExpired()) {
                 total -= coupon.getDiscount(total);
             }
-
-
-            // const today = new Date();
-            // if (objCoupon  ) {
-            //     if (today < objCoupon.expire_date.getTime() ) {
-            //         total = total * (1 - objCoupon.discount );
-            //     }
-            //     else {
-            //         total += freight;
-            //         return {
-            //             total: total,
-            //             freight: freight,
-            //             message: 'Coupon expired'
-            //         };
-            //     }
-            // }
-            // else {
-            //     total += freight;
-            //     throw new Error('Coupon not found');
-            // }
         }
         total += freight;
         if (input.email) {
             this.mailer.send(input.email, 'Pedido realizado com sucesso', 'Obrigado por comprar conosco');
         }
+
         const date = new Date();
-        const year = date.getFullYear();
-        const sequence = await this.orderData.count();
-        const code = `${year}${sequence.toString().padStart(8, '0')}`;
+        const sequence = await this.orderData.count() + 1;
+        const orderCode = new OrderCode(date, sequence);
         await this.orderData.save({cpf: input.cpf, total: total});
         return {
             total: total,
-            code: code,
+            code: orderCode.getCode(),
             freight: freight
         };
     }
@@ -95,7 +76,7 @@ export default class Checkout {
 
 type Input = {
     cpf: string;
-    items: {id_product: number, quantity: number}[];
+    items: {idProduct: number, quantity: number}[];
     coupon?: string;
     email?: string;
 }

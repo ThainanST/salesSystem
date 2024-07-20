@@ -12,9 +12,9 @@ test("Deve consultar um pedido", async function () {
     const input = {
         cpf: "987.654.321-00",
         items: [
-            { id_product: 1, quantity: 1 },
-            { id_product: 2, quantity: 1 },
-            { id_product: 3, quantity: 3 }
+            { idProduct: 1, quantity: 1 },
+            { idProduct: 2, quantity: 1 },
+            { idProduct: 3, quantity: 3 }
         ]
     };
     await checkout.execute(input);

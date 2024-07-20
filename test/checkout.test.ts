@@ -11,14 +11,14 @@ import OrderDataDatabase from '../src/OrderDataDatabase';
 import OrderData from '../src/OrderData';
 
 const productData: ProductData = {
-    async getProductById(id_product: number): Promise<any> {
-            const products: { [id_product: number] : any } = {
-                1: { id_product: 1, description: 'A', price: 1000, width: 100, height: 30, length: 10, weight: 3, currency: 'BRL' },
-                2: { id_product: 2, description: 'B', price: 5000, width: 50, height: 50, length: 50, weight: 22, currency: 'BRL' },
-                3: { id_product: 3, description: 'C', price: 30, width: 10, height: 10, length: 10, weight: 0.9, currency: 'BRL' },
-                4: { id_product: 1, description: 'D', price: 100, width: 100, height: 30, length: 10, weight: 3, currency: 'USD' },
+    async getProductById(idProduct: number): Promise<any> {
+            const products: { [idProduct: number] : any } = {
+                1: { idProduct: 1, description: 'A', price: 1000, width: 100, height: 30, length: 10, weight: 3, currency: 'BRL' },
+                2: { idProduct: 2, description: 'B', price: 5000, width: 50, height: 50, length: 50, weight: 22, currency: 'BRL' },
+                3: { idProduct: 3, description: 'C', price: 30, width: 10, height: 10, length: 10, weight: 0.9, currency: 'BRL' },
+                4: { idProduct: 1, description: 'D', price: 100, width: 100, height: 30, length: 10, weight: 3, currency: 'USD' },
             };
-            return products[id_product];
+            return products[idProduct];
         }
 }
 
@@ -37,9 +37,9 @@ test("Não deve criar pedido com cpf inválido", async function () {
     const input = {
         cpf: "144.796.170-63",
         items: [
-            { id_product: 1, quantity: 1 },
-            { id_product: 2, quantity: 1 },
-            { id_product: 3, quantity: 3 }
+            { idProduct: 1, quantity: 1 },
+            { idProduct: 2, quantity: 1 },
+            { idProduct: 3, quantity: 3 }
         ]
     };
     // const productData = new ProductDataDatabase();
@@ -52,9 +52,9 @@ test("Deve fazer pedido com 3 produtos", async function () {
     const input = {
         cpf: "987.654.321-00",
         items: [
-            { id_product: 1, quantity: 1 },
-            { id_product: 2, quantity: 1 },
-            { id_product: 3, quantity: 3 }
+            { idProduct: 1, quantity: 1 },
+            { idProduct: 2, quantity: 1 },
+            { idProduct: 3, quantity: 3 }
         ]
     };
     // const productData = new ProductDataDatabase();
@@ -75,10 +75,10 @@ test("Deve fazer pedido com 4 produtos e moedas diferentes com stub e spy", asyn
     const input = {
         cpf: "987.654.321-00",
         items: [
-            { id_product: 1, quantity: 1 },
-            { id_product: 2, quantity: 1 },
-            { id_product: 3, quantity: 3 },
-            { id_product: 4, quantity: 1 }
+            { idProduct: 1, quantity: 1 },
+            { idProduct: 2, quantity: 1 },
+            { idProduct: 3, quantity: 3 },
+            { idProduct: 4, quantity: 1 }
         ],
         email: "thainan@mail.com",
     };
@@ -116,10 +116,10 @@ test("Deve fazer pedido com 4 produtos e moedas diferentes com mock", async func
     const input = {
         cpf: "987.654.321-00",
         items: [
-            { id_product: 1, quantity: 1 },
-            { id_product: 2, quantity: 1 },
-            { id_product: 3, quantity: 3 },
-            { id_product: 4, quantity: 1 }
+            { idProduct: 1, quantity: 1 },
+            { idProduct: 2, quantity: 1 },
+            { idProduct: 3, quantity: 3 },
+            { idProduct: 4, quantity: 1 }
         ],
         email: "thainan@mail.com",
     };
@@ -157,10 +157,10 @@ test("Deve fazer pedido com 4 produtos e moedas diferentes com fake", async func
     const input = {
         cpf: "987.654.321-00",
         items: [
-            { id_product: 1, quantity: 1 },
-            { id_product: 2, quantity: 1 },
-            { id_product: 3, quantity: 3 },
-            { id_product: 4, quantity: 1 }
+            { idProduct: 1, quantity: 1 },
+            { idProduct: 2, quantity: 1 },
+            { idProduct: 3, quantity: 3 },
+            { idProduct: 4, quantity: 1 }
         ],
         email: "thainan@mail.com",
     };
@@ -180,9 +180,9 @@ test("Deve fazer pedido com 3 produtos com código do pedido", async function ()
     const input = {
         cpf: "987.654.321-00",
         items: [
-            { id_product: 1, quantity: 1 },
-            { id_product: 2, quantity: 1 },
-            { id_product: 3, quantity: 3 }
+            { idProduct: 1, quantity: 1 },
+            { idProduct: 2, quantity: 1 },
+            { idProduct: 3, quantity: 3 }
         ]
     };
     const orderDataFake: OrderData = {
@@ -196,5 +196,5 @@ test("Deve fazer pedido com 3 produtos com código do pedido", async function ()
     const checkout = new Checkout(productData, couponData, orderDataFake);
     const output = await checkout.execute(input);
     expect(output.total).toEqual(6350);
-    expect(output.code).toBe('202400000001');
+    expect(output.code).toBe('202400000002');
 });

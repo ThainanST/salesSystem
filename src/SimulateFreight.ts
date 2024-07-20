@@ -11,7 +11,7 @@ export default class SimulateFreight {
         const products = input.items;
         let freight = 0;
         for (let item of products) {
-            const product = await this.productData.getProductById(item.id_product);
+            const product = await this.productData.getProductById(item.idProduct);
             if (product) {
                 if (item.quantity <= 0) {
                     throw new Error('Quantity must be positive');

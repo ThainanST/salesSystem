@@ -19,9 +19,9 @@ test("Deve fazer pedido com 3 produtos", async function () {
     const input = {
         cpf: "987.654.321-00",
         items: [
-            { id_product: 1, quantity: 1 },
-            { id_product: 2, quantity: 1 },
-            { id_product: 3, quantity: 3 }
+            { idProduct: 1, quantity: 1 },
+            { idProduct: 2, quantity: 1 },
+            { idProduct: 3, quantity: 3 }
         ]
     };
     const response = await axios.post("http://localhost:3000/checkout", input);
@@ -33,9 +33,9 @@ test("Deve fazer pedido com produto inexistente", async function () {
     const input = {
         cpf: "987.654.321-00",
         items: [
-            { id_product: 1, quantity: 1 },
-            { id_product: 99, quantity: 1 },
-            { id_product: 3, quantity: 3 }
+            { idProduct: 1, quantity: 1 },
+            { idProduct: 99, quantity: 1 },
+            { idProduct: 3, quantity: 3 }
         ]
     };
     const response = await axios.post("http://localhost:3000/checkout", input);
@@ -48,9 +48,9 @@ test("Deve fazer pedido com 3 produtos e aplicar cupom de desconto", async funct
     const input = {
         cpf: "987.654.321-00",
         items: [
-            { id_product: 1, quantity: 1 },
-            { id_product: 2, quantity: 1 },
-            { id_product: 3, quantity: 3 }
+            { idProduct: 1, quantity: 1 },
+            { idProduct: 2, quantity: 1 },
+            { idProduct: 3, quantity: 3 }
         ],
         coupon: "VALE20"
     };
@@ -63,9 +63,9 @@ test.skip("Não deve aplicar cupom de desconto inválido", async function () {
     const input = {
         cpf: "987.654.321-00",
         items: [
-            { id_product: 1, quantity: 1 },
-            { id_product: 2, quantity: 1 },
-            { id_product: 3, quantity: 3 }
+            { idProduct: 1, quantity: 1 },
+            { idProduct: 2, quantity: 1 },
+            { idProduct: 3, quantity: 3 }
         ],
         coupon: "INVALIDO"
     };
@@ -79,9 +79,9 @@ test.skip("Não deve aplicar cupom de desconto expirado", async function () {
     const input = {
         cpf: "987.654.321-00",
         items: [
-            { id_product: 1, quantity: 1 },
-            { id_product: 2, quantity: 1 },
-            { id_product: 3, quantity: 3 }
+            { idProduct: 1, quantity: 1 },
+            { idProduct: 2, quantity: 1 },
+            { idProduct: 3, quantity: 3 }
         ],
         coupon: "VALE20_EXPIRED"
     };
@@ -95,7 +95,7 @@ test("Não deve fazer pedido com quantidade negativa", async function () {
     const input = {
         cpf: "987.654.321-00",
         items: [
-            { id_product: 1, quantity: -1 }
+            { idProduct: 1, quantity: -1 }
         ]
     };
     const response = await axios.post("http://localhost:3000/checkout", input);
@@ -108,21 +108,21 @@ test("Não deve fazer pedido item duplicado", async function () {
     const input = {
         cpf: "987.654.321-00",
         items: [
-            { id_product: 1, quantity: 1 },
-            { id_product: 1, quantity: 1 }
+            { idProduct: 1, quantity: 1 },
+            { idProduct: 1, quantity: 1 }
         ]
     };
     const response = await axios.post("http://localhost:3000/checkout", input);
     expect(response.status).toBe(422);
     const output = response.data;
-    expect(output.message).toBe("Duplicate products");
+    expect(output.message).toBe("Duplicated products");
 });
 
 test("Deve fazer pedido e calcular o frete", async function () {
     const input = {
         cpf: "987.654.321-00",
         items: [
-            { id_product: 1, quantity: 1 }
+            { idProduct: 1, quantity: 1 }
         ]
     };
     const response = await axios.post("http://localhost:3000/checkout", input);
@@ -135,7 +135,7 @@ test("Deve fazer pedido e calcular o frete com valor minimo", async function () 
     const input = {
         cpf: "987.654.321-00",
         items: [
-            { id_product: 3, quantity: 1 }
+            { idProduct: 3, quantity: 1 }
         ]
     };
     const response = await axios.post("http://localhost:3000/checkout", input);

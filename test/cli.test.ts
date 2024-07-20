@@ -17,9 +17,9 @@ test("Deve inserir item", async function () {
     let output: any = await handleCommand(command);
     command = "add-item 2 1";
     output = await handleCommand(command);
-    expect(output.items[0].id_product).toBe("1");
+    expect(output.items[0].idProduct).toBe("1");
     expect(output.items[0].quantity).toBe("1");
-    expect(output.items[1].id_product).toBe("2");
+    expect(output.items[1].idProduct).toBe("2");
     expect(output.items[1].quantity).toBe("1");
 });
 

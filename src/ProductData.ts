@@ -1,3 +1,3 @@
 export default interface ProductData {
-    getProductById(id_product: number): Promise<any>;
+    getProductById(idProduct: number): Promise<any>;
 }

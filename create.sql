@@ -1,7 +1,7 @@
 create schema sales;
 
 create table sales.products (
-    idProduct integer primary key,
+    id_product integer primary key,
     description text,
     price numeric,
     width integer,
@@ -17,7 +17,7 @@ create table sales.coupons (
     expire_date timestamp
 );
 
-insert into sales.products (idProduct, description, price, width, height, length, weight, currency) values
+insert into sales.products (id_product, description, price, width, height, length, weight, currency) values
     (1, 'A', 1000, 100, 30, 10, 3, 'BRL'),
     (2, 'B', 5000, 50,  50, 50, 22, 'BRL'),
     (3, 'C', 30,   10,  10, 10, 0.9, 'BRL'),
@@ -45,8 +45,8 @@ create table sales.order (
 
 create table sales.order_items (
     id_order integer references sales.order(id_order),
-    idProduct integer references sales.products(idProduct),
+    id_product integer references sales.products(id_product),
     price numeric,
     quantity integer,
-    primary key (id_order, idProduct)
+    primary key (id_order, id_product)
 );

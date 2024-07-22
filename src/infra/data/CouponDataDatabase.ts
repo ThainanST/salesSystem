@@ -1,6 +1,6 @@
-import Coupon from "./Coupon";
-import CouponData from "./CouponData";
+import CouponData from "../../domain/data/CouponData";
 import pgp from 'pg-promise';
+import Coupon from "../../domain/entities/Coupon";
 
 export default class CouponDataDatabase implements CouponData {
     async getCouponByCode (code: string): Promise<Coupon> {
@@ -10,11 +10,12 @@ export default class CouponDataDatabase implements CouponData {
         const postgresPort = '5432';
         const postgresDatabase = 'app';
         const connection = pgp()(`postgres://${postgresUser}:${postgresPassword}@${postgresHost}:${postgresPort}/${postgresDatabase}`);
-        const [objCoupon] = await connection.query("SELECT * FROM sales.coupons WHERE code = $1;", [code]);
+        const [couponData] = await connection.query("SELECT * FROM sales.coupons WHERE code = $1;", [code]);
         await connection.$pool.end();
+        if (!couponData) throw new Error('Coupon not found');
         return new Coupon(
-            objCoupon.code,
-            objCoupon.discount,
-            objCoupon.expire_date);
+            couponData.code,
+            couponData.discount,
+            couponData.expire_date);
     }
 }

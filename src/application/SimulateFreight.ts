@@ -1,4 +1,4 @@
-import FreightCalculator from "./FreightCalculator";
+import FreightCalculator from "../domain/entities/FreightCalculator";
 
 export default class SimulateFreight {
 

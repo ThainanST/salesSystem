@@ -1,4 +1,4 @@
-import Coupon from "../src/Coupon";
+import Coupon from "../src/domain/entities/Coupon";
 
 test('Deve testar se o coupon não expirado e pegar desconto', function () {
     const code = 'VALE20';

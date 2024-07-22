@@ -1,14 +1,15 @@
 import sinon from 'sinon';
-import Checkout from "../src/Checkout";
-import ProductData from "../src/ProductData";
-import CouponData from "../src/CouponData";
-import CouponDataDatabase from "../src/CouponDataDatabase";
-import ProductDataDatabase from "../src/ProductDataDatabase";
-import CurrencyGateway from "../src/CurrencyGatewayRandom";
-import MailerConsole from "../src/MailerConsole";
-import Mailer from "../src/Mailer";
-import OrderDataDatabase from '../src/OrderDataDatabase';
-import OrderData from '../src/OrderData';
+import Checkout from "../src/application/Checkout";
+import ProductData from "../src/domain/data/ProductData";
+import CouponData from "../src/domain/data/CouponData";
+import CouponDataDatabase from "../src/infra/data/CouponDataDatabase";
+import ProductDataDatabase from "../src/infra/data/ProductDataDatabase";
+import CurrencyGateway from "../src/infra/gateway/CurrencyGatewayRandom";
+import MailerConsole from "../src/infra/mailer/MailerConsole";
+import Mailer from "../src/infra/mailer/Mailer";
+import OrderDataDatabase from '../src/infra/data/OrderDataDatabase';
+import OrderData from '../src/domain/data/OrderData';
+import Currencies from '../src/domain/entities/Currencies';
 
 const productData: ProductData = {
     async getProductById(idProduct: number): Promise<any> {
@@ -16,7 +17,7 @@ const productData: ProductData = {
                 1: { idProduct: 1, description: 'A', price: 1000, width: 100, height: 30, length: 10, weight: 3, currency: 'BRL' },
                 2: { idProduct: 2, description: 'B', price: 5000, width: 50, height: 50, length: 50, weight: 22, currency: 'BRL' },
                 3: { idProduct: 3, description: 'C', price: 30, width: 10, height: 10, length: 10, weight: 0.9, currency: 'BRL' },
-                4: { idProduct: 1, description: 'D', price: 100, width: 100, height: 30, length: 10, weight: 3, currency: 'USD' },
+                4: { idProduct: 4, description: 'D', price: 100, width: 100, height: 30, length: 10, weight: 3, currency: 'USD' },
             };
             return products[idProduct];
         }
@@ -65,11 +66,17 @@ test("Deve fazer pedido com 3 produtos", async function () {
 });
 
 test("Deve fazer pedido com 4 produtos e moedas diferentes com stub e spy", async function () {
-    const currencyGatewayStub = sinon.stub(CurrencyGateway.prototype,'getCurrencies').resolves({
-        "BRL": 1.0,
-        "USD": 3.0,
-        "EUR": 6.5
-    });
+    const currencyGatewayStub = sinon.stub(CurrencyGateway.prototype, 'getCurrencies')
+    .resolves(
+        (() => {
+            const CurrencyQuotes = new Currencies();
+            CurrencyQuotes.addCurrency("BRL", 1.0);
+            CurrencyQuotes.addCurrency("USD", 3.0);
+            CurrencyQuotes.addCurrency("EUR", 6.5);
+            return CurrencyQuotes;
+            }
+        )()
+    );
     const mailerSpy = sinon.spy(MailerConsole.prototype, 'send');
 
     const input = {
@@ -102,11 +109,16 @@ test("Deve fazer pedido com 4 produtos e moedas diferentes com mock", async func
     const currencyGatewayMock = sinon.mock(CurrencyGateway.prototype);
     currencyGatewayMock.expects('getCurrencies')
         .once()
-        .resolves({
-            "BRL": 1.0,
-            "USD": 3.0,
-            "EUR": 6.5
-        });
+        .resolves(
+            (() => {
+                const CurrencyQuotes = new Currencies();
+                CurrencyQuotes.addCurrency("BRL", 1.0);
+                CurrencyQuotes.addCurrency("USD", 3.0);
+                CurrencyQuotes.addCurrency("EUR", 6.5);
+                return CurrencyQuotes;
+                }
+            )()
+        );
 
     const mailerMock = sinon.mock(MailerConsole.prototype);
     mailerMock.expects('send')
@@ -145,12 +157,12 @@ test("Deve fazer pedido com 4 produtos e moedas diferentes com fake", async func
     }
 
     const currencyGatewayFake: CurrencyGateway = {
-        async getCurrencies(): Promise<any> {
-            return {
-                "BRL": 1.0,
-                "USD": 3.0,
-                "EUR": 6.5
-            };
+        async getCurrencies(): Promise<Currencies> {
+            const currencies = new Currencies();
+            currencies.addCurrency("BRL", 1.0);
+            currencies.addCurrency("USD", 3.0);
+            currencies.addCurrency("EUR", 6.5);
+            return currencies;
         }
     }
 

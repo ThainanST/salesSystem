@@ -1,4 +1,4 @@
-import OrderData from './OrderData';
+import OrderData from '../domain/data/OrderData';
 
 export default class GetOrderByCpf {
     

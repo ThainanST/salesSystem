@@ -1,4 +1,4 @@
-import { validate } from "../src/CpfValidator";
+import { validate } from "../src/domain/entities/CpfValidator";
 import axios from "axios";
 
 const validCpfs = [

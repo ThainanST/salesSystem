@@ -1,4 +1,4 @@
-import CouponDataDatabase from "../src/CouponDataDatabase";
+import CouponDataDatabase from "../src/infra/data/CouponDataDatabase";
 import ValidateCoupon from "../src/ValidateCoupon";
 
 test('Deve validar um coupon de desconto', async function () {

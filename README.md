@@ -101,3 +101,18 @@ preço: R$400,00 (1000 * 1 * (40/100))
 ### Importante
 - Implemente os DTOs para cada um dos use cases
 - Utilize o banco de dados para obter e persistir os dados
+
+
+## Parte 4
+
+### Testes
+
+1. Deve retornar um pedido com base no código (caso de uso)
+2. Deve retornar uma lista de pedidos (caso de uso)
+3. Deve calcular frete - distancia entre dois CEPs (caso de uso)
+
+### Considere
+- Criar uma API (tanto faz se é REST. CraphQL ou qualquer outro formato) para os casos de uso
+- Criar testes de integração para a API e os casos de uso
+- Cadastrar no banco de dados 2 ou 3 CEPs e associar com as coordenadas das cidades dos CEPs, apenas para viabilizar os cálculos, não é necessário carregar a base de CEPs inteira 
+- Utilizar o algoritmo de cálculo e arquivo com as coordenadas: https://github.com/rodrigobranas/distance_calculator

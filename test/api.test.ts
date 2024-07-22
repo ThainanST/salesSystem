@@ -56,10 +56,10 @@ test("Deve fazer pedido com 3 produtos e aplicar cupom de desconto", async funct
     };
     const response = await axios.post("http://localhost:3000/checkout", input);
     const output = response.data;
-    expect(output.total).toEqual(5132);
+    expect(output.total).toEqual(5080);
 });
 
-test.skip("Não deve aplicar cupom de desconto inválido", async function () {
+test("Não deve aplicar cupom de desconto inválido", async function () {
     const input = {
         cpf: "987.654.321-00",
         items: [

@@ -1,8 +1,11 @@
-import ProductDataDatabase from "../src/ProductDataDatabase";
-import CouponDataDatabase from "../src/CouponDataDatabase";
-import Checkout from "../src/Checkout";
-import GetOrderByCpf from "../src/GetOrderByCpf";
-import OrderDataDatabase from "../src/OrderDataDatabase";
+import ProductDataDatabase from "../src/infra/data/ProductDataDatabase";
+import CouponDataDatabase from "../src/infra/data/CouponDataDatabase";
+import Checkout from "../src/application/Checkout";
+import GetOrderByCpf from "../src/application/GetOrderByCpf";
+import OrderDataDatabase from "../src/infra/data/OrderDataDatabase";
+import pg from "pg-promise/typescript/pg-subset";
+import pgPromise from "pg-promise";
+
 
 test("Deve consultar um pedido", async function () {
     const productData = new ProductDataDatabase();

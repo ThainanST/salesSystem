@@ -1,6 +1,6 @@
-import Checkout from "./Checkout";
-import CouponDataDatabase from "./CouponDataDatabase";
-import ProductDataDatabase from "./ProductDataDatabase";
+import Checkout from "./application/Checkout";
+import CouponDataDatabase from "./infra/data/CouponDataDatabase";
+import ProductDataDatabase from "./infra/data/ProductDataDatabase";
 
 let input: any = {
     items: [],

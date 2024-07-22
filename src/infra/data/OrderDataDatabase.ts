@@ -1,9 +1,10 @@
-import OrderData from "./OrderData";
+import Order from "../../domain/entities/Order";
+import OrderData from "../../domain/data/OrderData";
 import pgp from 'pg-promise';
 
 export default class OrderDataDatabase implements OrderData {
     
-    async save (order: any): Promise<void> {
+    async save (order: Order): Promise<void> {
         const connection = pgp()("postgres://postgres:123456@localhost:5432/app");
         await connection.query("INSERT INTO sales.order (cpf, total) VALUES ($1, $2);", [order.cpf, order.total]);
         await connection.$pool.end();

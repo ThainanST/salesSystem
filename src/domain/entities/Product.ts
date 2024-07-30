@@ -12,4 +12,12 @@ export default class Product {
     ) {
 
     }
+
+    getVolume(): number {
+        return ( (this.width * this.height * this.length)  / 1000000 );
+    }
+
+    getDensity(): number {
+        return ( this.weight / this.getVolume() );
+    }
 }

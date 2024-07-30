@@ -1,32 +1,15 @@
 import FreightCalculator from "../src/domain/entities/FreightCalculator";
+import Product from "../src/domain/entities/Product";
 
 test('Deve calcular o frete para um produto', () => {
-    const product = {
-        idProduct: 1,
-        description: 'A',
-        price: 1000,
-        width: 100,
-        height: 30,
-        length: 10,
-        weight: 3,
-        currency: 'BRL'
-    };
+    const product = new Product(1, 'A', 1000, 100, 30, 10, 3);
     const freightCalculator = new FreightCalculator();
     const freight = freightCalculator.calculate(product);
     expect(freight).toBe(30);
 });
 
 test('Deve calcular o frete para um produto com valor mínimo', () => {
-    const product = {
-        idProduct: 3,
-        description: 'C',
-        price: 30,
-        width: 10,
-        height: 10,
-        length: 10,
-        weight: 0.9,
-        currency: 'BRL'
-    };
+    const product = new Product(3, 'C', 30, 10, 10, 10, 0.9);
     const freightCalculator = new FreightCalculator();
     const freight = freightCalculator.calculate(product);
     expect(freight).toBe(10);

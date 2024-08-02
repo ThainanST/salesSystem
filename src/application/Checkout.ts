@@ -6,16 +6,15 @@ import CurrencyGateway from '../infra/gateway/CurrencyGateway';
 import Mailer from '../infra/mailer/Mailer';
 import MailerConsole from '../infra/mailer/MailerConsole';
 import OrderDataDatabase from '../infra/data/OrderDataDatabase';
-import FreightCalculator from '../domain/entities/FreightCalculator';
-import ValidateCoupon from '../ValidateCoupon';
-import OrderCode from '../domain/entities/OrderCode';
 import Order from '../domain/entities/Order';
+import ProductDataDatabase from '../infra/data/ProductDataDatabase';
+import CouponDataDatabase from '../infra/data/CouponDataDatabase';
 
 export default class Checkout {
 
     constructor (
-        readonly productData: ProductData,
-        readonly couponData: CouponData,
+        readonly productData: ProductData = new ProductDataDatabase(),
+        readonly couponData: CouponData = new CouponDataDatabase(),
         readonly orderData: OrderDataDatabase = new OrderDataDatabase(),
         readonly currencyGateway: CurrencyGateway = new CurrencyGatewayRandom(),
         readonly mailer: Mailer = new MailerConsole(),
@@ -49,51 +48,6 @@ export default class Checkout {
             code: order.getCode(),
             freight: order.getFreight()
         };
-
-
-        // const isCpfValid = validate(input.cpf);
-        // if (!isCpfValid) {
-        //     throw new Error('Invalid cpf');
-        // }
-        // const products = input.items;
-        // const productsId = products.map( (prod: any) => prod.idProduct);
-        // const productsIdSet = new Set(productsId);
-        // if (productsId.length !== productsIdSet.size) {
-        //     throw new Error('Duplicated products');
-        // }
-        // let total = 0;
-        // let freight = 0;
-        // const freightCalculator = new FreightCalculator();
-        // const currencies: any = await this.currencyGateway.getCurrencies();
-        // for (let item of products) {
-        //     const product = await this.productData.getProductById(item.idProduct);
-        //     if (product) {
-        //         if (item.quantity <= 0) {
-        //             throw new Error('Quantity must be positive');
-        //         }
-        //         total += parseFloat(product.price) * item.quantity * currencies[product.currency];
-        //         freight += freightCalculator.calculate(product);
-        //     }
-        //     else {
-        //         throw new Error('Product not found');
-        //     }
-        // }
-        // if (input.coupon) {
-        //     const coupon = await this.couponData.getCouponByCode(input.coupon);
-        //     if (coupon && !coupon.isExpired()) {
-        //         total -= coupon.getDiscount(total);
-        //     }
-        // }
-        // total += freight;
-        // if (input.email) {
-        //     this.mailer.send(input.email, 'Pedido realizado com sucesso', 'Obrigado por comprar conosco');
-        // }
-
-        // const date = new Date();
-        // const sequence = await this.orderData.count() + 1;
-        // const orderCode = new OrderCode(date, sequence);
-        // await this.orderData.save({cpf: input.cpf, total: total});
-        
     }
     
 }

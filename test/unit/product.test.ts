@@ -1,4 +1,4 @@
-import Product from "../src/domain/entities/Product";
+import Product from "../../src/domain/entities/Product";
 
 test('Deve calcular o volume do produto', function () {
     const product = new Product(1, 'A', 1000, 100, 30, 10, 3);

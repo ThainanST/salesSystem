@@ -22,6 +22,9 @@ psql -d <database> -U <username>
 \dn                       # Listgit ar schemas
 \d <schema>.<tableName>   # Mostrar detalhes de uma <tabela> de um <schema>
 
+Sequencia para visualizar dados
+psql -d app -U postgres      # digitar senha
+SELECT * FROM sales.order;   # fazer consulta 
 
 rabittMQ
 

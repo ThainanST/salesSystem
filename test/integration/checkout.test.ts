@@ -1,18 +1,18 @@
 import sinon from 'sinon';
-import Checkout from "../src/application/Checkout";
-import ProductData from "../src/domain/data/ProductData";
-import CouponData from "../src/domain/data/CouponData";
-import CouponDataDatabase from "../src/infra/data/CouponDataDatabase";
-import ProductDataDatabase from "../src/infra/data/ProductDataDatabase";
-import CurrencyGateway from "../src/infra/gateway/CurrencyGatewayRandom";
-import MailerConsole from "../src/infra/mailer/MailerConsole";
-import Mailer from "../src/infra/mailer/Mailer";
-import OrderDataDatabase from '../src/infra/data/OrderDataDatabase';
-import OrderData from '../src/domain/data/OrderData';
-import Currencies from '../src/domain/entities/Currencies';
-import Product from '../src/domain/entities/Product';
+import Checkout from "../../src/application/Checkout";
+import ProductData from "../../src/domain/data/ProductData";
+import CouponData from "../../src/domain/data/CouponData";
+import CouponDataDatabase from "../../src/infra/data/CouponDataDatabase";
+import ProductDataDatabase from "../../src/infra/data/ProductDataDatabase";
+import CurrencyGateway from "../../src/infra/gateway/CurrencyGatewayRandom";
+import MailerConsole from "../../src/infra/mailer/MailerConsole";
+import Mailer from "../../src/infra/mailer/Mailer";
+import OrderDataDatabase from '../../src/infra/data/OrderDataDatabase';
+import OrderData from '../../src/domain/data/OrderData';
+import Currencies from '../../src/domain/entities/Currencies';
+import Product from '../../src/domain/entities/Product';
 
-const productData: ProductData = {
+const productDataFake: ProductData = {
     async getProductById(idProduct: number): Promise<Product> {
             const products: { [idProduct: number] : Product } = {
                 1: new Product( 1, 'A', 1000, 100, 30, 10, 3, 'BRL'),
@@ -24,7 +24,7 @@ const productData: ProductData = {
         }
 }
 
-const couponData: CouponData = {
+const couponDataFake: CouponData = {
     async getCouponByCode(code: string): Promise<any> {
         const coupons: any = {
             'VALE20': { code: 'VALE20', discount: 20, expire_date: '2024-10-01T10:00:00' },
@@ -44,9 +44,9 @@ test("Não deve criar pedido com cpf inválido", async function () {
             { idProduct: 3, quantity: 3 }
         ]
     };
-    // const productData = new ProductDataDatabase();
-    // const couponData = new CouponDataDatabase();
-    const checkout = new Checkout(productData, couponData);
+    // const productDataFake = new ProductDataDatabase();
+    // const couponDataFake = new CouponDataDatabase();
+    const checkout = new Checkout(productDataFake, couponDataFake);
     await expect(checkout.execute(input)).rejects.toThrow('Invalid cpf');
 });
 
@@ -59,9 +59,9 @@ test("Deve fazer pedido com 3 produtos", async function () {
             { idProduct: 3, quantity: 3 }
         ]
     };
-    // const productData = new ProductDataDatabase();
-    // const couponData = new CouponDataDatabase();
-    const checkout = new Checkout(productData, couponData);
+    // const productDataFake = new ProductDataDatabase();
+    // const couponDataFake = new CouponDataDatabase();
+    const checkout = new Checkout(productDataFake, couponDataFake);
     const output = await checkout.execute(input);
     expect(output.total).toEqual(6350);
 });
@@ -90,9 +90,9 @@ test("Deve fazer pedido com 4 produtos e moedas diferentes com stub e spy", asyn
         ],
         email: "thainan@mail.com",
     };
-    // const productData = new ProductDataDatabase();
-    // const couponData = new CouponDataDatabase();
-    const checkout = new Checkout(productData, couponData);
+    // const productDataFake = new ProductDataDatabase();
+    // const couponDataFake = new CouponDataDatabase();
+    const checkout = new Checkout(productDataFake, couponDataFake);
     const output = await checkout.execute(input);
     expect(output.total).toEqual(6680);
     expect(mailerSpy.calledOnce).toBeTruthy();
@@ -136,9 +136,9 @@ test("Deve fazer pedido com 4 produtos e moedas diferentes com mock", async func
         ],
         email: "thainan@mail.com",
     };
-    // const productData = new ProductDataDatabase();
-    // const couponData = new CouponDataDatabase();
-    const checkout = new Checkout(productData, couponData);
+    // const productDataFake = new ProductDataDatabase();
+    // const couponDataFake = new CouponDataDatabase();
+    const checkout = new Checkout(productDataFake, couponDataFake);
     const output = await checkout.execute(input);
     expect(output.total).toEqual(6680);
     currencyGatewayMock.verify();
@@ -177,10 +177,10 @@ test("Deve fazer pedido com 4 produtos e moedas diferentes com fake", async func
         ],
         email: "thainan@mail.com",
     };
-    // const productData = new ProductDataDatabase();
-    // const couponData = new CouponDataDatabase();
+    // const productDataFake = new ProductDataDatabase();
+    // const couponDataFake = new CouponDataDatabase();
     const orderData = new OrderDataDatabase();
-    const checkout = new Checkout(productData, couponData, orderData, currencyGatewayFake, mailerFake);
+    const checkout = new Checkout(productDataFake, couponDataFake, orderData, currencyGatewayFake, mailerFake);
     const output = await checkout.execute(input);
     expect(output.total).toEqual(6680);
     expect(log).toHaveLength(1);
@@ -217,7 +217,7 @@ test("Deve fazer pedido com 3 produtos com código do pedido", async function ()
         }
     }
 
-    const checkout = new Checkout(productData, couponData, orderDataFake);
+    const checkout = new Checkout(productDataFake, couponDataFake, orderDataFake);
     const output = await checkout.execute(input);
     expect(output.total).toEqual(6350);
     expect(output.code).toBe('202400000002');

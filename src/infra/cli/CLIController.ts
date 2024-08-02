@@ -10,8 +10,21 @@ export default class CLIController {
 
         handler.on("set-cpf", function (params: string) {
             input.cpf = params;
-            console.log(input);
         });
+
+        handler.on("add-item", function (params: string) {
+            const [idProduct, quantity] = params.split(" ");
+            input.items.push({
+                idProduct: parseInt(idProduct),
+                quantity: parseInt(quantity)
+            });
+        });
+
+        handler.on("checkout", async function () {
+            const output = await checkout.execute(input);
+            handler.write(JSON.stringify(output));
+        });
+
 
     }
 }

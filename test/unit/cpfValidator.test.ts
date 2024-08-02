@@ -1,5 +1,4 @@
-import { validate } from "../src/domain/entities/CpfValidator";
-import axios from "axios";
+import { validate } from "../../src/domain/entities/CpfValidator";
 
 const validCpfs = [
     "987.654.321-00",

@@ -1,5 +1,5 @@
-import ProductDataDatabase from "../src/infra/data/ProductDataDatabase";
-import SimulateFreight from "../src/application/SimulateFreight";
+import ProductDataDatabase from "../../src/infra/data/ProductDataDatabase";
+import SimulateFreight from "../../src/application/SimulateFreight";
 
 test('Deve simular frete para um pedido', async function () {
     const input = { 

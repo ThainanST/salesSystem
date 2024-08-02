@@ -11,7 +11,11 @@ export default class OrderDataDatabase implements OrderData {
     
     async save (order: Order): Promise<void> {
         await this.dbConnection.open();
-        await this.dbConnection.query("INSERT INTO sales.order (cpf, total) VALUES ($1, $2);", [order.cpf, order.total]);
+        await this.dbConnection.query(
+            "INSERT INTO sales.order (cpf, total) VALUES ($1, $2);", [
+                order.cpf.getCpf(),
+                order.getTotal()
+            ]);
         await this.dbConnection.close();
         
     }

@@ -13,6 +13,7 @@ async function init() {
         ]
     };
     channel.sendToQueue("checkout", Buffer.from(JSON.stringify(input)));
+    console.log("Message sent: ", JSON.stringify(input));
 }
 
 init();

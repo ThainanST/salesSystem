@@ -1,5 +1,5 @@
-import CouponDataDatabase from "../src/infra/data/CouponDataDatabase";
-import ValidateCoupon from "../src/ValidateCoupon";
+import CouponDataDatabase from "../../src/infra/data/CouponDataDatabase";
+import ValidateCoupon from "../../src/domain/entities/ValidateCoupon";
 
 test('Deve validar um coupon de desconto', async function () {
     const couponData = new CouponDataDatabase();

@@ -41,3 +41,34 @@ JavaScript (sinon):
 Python (unittest.mock): 
 C# (Moq)
 
+
+
+
+#######################
+FRONTEND
+#######################
+
+Vite é uma ferramenta moderna para desenvolvimento frontend que oferece rápida inicialização, Hot Module Replacement (HMR) e otimização de build usando ES modules.
+
+yarn create vite 
+yarn install
+yarn dev              # expoe o frontend
+yarn add vitest @vue/test-utils happy-dom
+yarn test             # roda os testes
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

@@ -15,7 +15,10 @@ export default class ProductDataDatabase implements ProductData {
 
     async getProductById (idProduct: number): Promise<Product> {
         await this.dbConnection.open();
-        const [productData] = await this.dbConnection.query("SELECT * FROM sales.products WHERE id_product = $1;", [idProduct]);
+        const [productData] = await this.dbConnection.query(
+                    "SELECT * FROM sales.products WHERE id_product = $1;",
+                    [idProduct]
+            );
         await this.dbConnection.close();
         if (!productData) throw new Error('Product not found');
         return this.productFactory(productData);

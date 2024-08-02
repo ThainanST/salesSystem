@@ -1,27 +1,32 @@
 import Order from "../../domain/entities/Order";
 import OrderData from "../../domain/data/OrderData";
-import pgp from 'pg-promise';
+import DbConnection from "../database/DbConnection";
+import PgpConnection from "../database/PgpConnection";
 
 export default class OrderDataDatabase implements OrderData {
+
+    constructor(readonly dbConnection: DbConnection = new PgpConnection()) {
+
+    }
     
     async save (order: Order): Promise<void> {
-        const connection = pgp()("postgres://postgres:123456@localhost:5432/app");
-        await connection.query("INSERT INTO sales.order (cpf, total) VALUES ($1, $2);", [order.cpf, order.total]);
-        await connection.$pool.end();
+        await this.dbConnection.open();
+        await this.dbConnection.query("INSERT INTO sales.order (cpf, total) VALUES ($1, $2);", [order.cpf, order.total]);
+        await this.dbConnection.close();
         
     }
 
     async getOrderByCpf (cpf: string): Promise<any> {
-        const connection = pgp()("postgres://postgres:123456@localhost:5432/app");
-        const [orderData] = await connection.query("SELECT * FROM sales.order WHERE cpf = $1;", [cpf]);
-        await connection.$pool.end();
+        await this.dbConnection.open();
+        const [orderData] = await this.dbConnection.query("SELECT * FROM sales.order WHERE cpf = $1;", [cpf]);
+        await this.dbConnection.close();
         return orderData;
     }
     
     async count(): Promise<number> {
-        const connection = pgp()("postgres://postgres:123456@localhost:5432/app");
-        const [options] = await connection.query("select count(*)::integer as count FROM sales.order;", []);
-        await connection.$pool.end();
+        await this.dbConnection.open();
+        const [options] = await this.dbConnection.query("select count(*)::integer as count FROM sales.order;", []);
+        await this.dbConnection.close();
         return options.count;
     }
 }

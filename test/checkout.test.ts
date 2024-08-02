@@ -199,6 +199,17 @@ test("Deve fazer pedido com 3 produtos com código do pedido", async function ()
         ]
     };
     const orderDataFake: OrderData = {
+        dbConnection: {
+            open: function (): Promise<void> {
+                throw new Error('Function not implemented.');
+            },
+            query: function (statement: string, params: any): Promise<any> {
+                throw new Error('Function not implemented.');
+            },
+            close: function (): Promise<void> {
+                throw new Error('Function not implemented.');
+            }
+        },
         async save(order: any): Promise<void> {},
         async getOrderByCpf(cpf: string): Promise<any> {},
         async count(): Promise<number> {

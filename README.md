@@ -116,3 +116,15 @@ preço: R$400,00 (1000 * 1 * (40/100))
 - Criar testes de integração para a API e os casos de uso
 - Cadastrar no banco de dados 2 ou 3 CEPs e associar com as coordenadas das cidades dos CEPs, apenas para viabilizar os cálculos, não é necessário carregar a base de CEPs inteira 
 - Utilizar o algoritmo de cálculo e arquivo com as coordenadas: https://github.com/rodrigobranas/distance_calculator
+
+
+## Parte 5, Aula 6
+
+### Escopo
+1. Extraia o catálogo de itens para um bounded context
+2. Extraia o checkout para um bounded context 
+3. Extraia o frete para um bounded context
+
+### Testes
+
+### Considere

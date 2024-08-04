@@ -1,0 +1,138 @@
+/* Geral */
+body {
+    font-family: Arial, sans-serif;
+    line-height: 1.6;
+    margin: 0;
+    padding: 0;
+}
+
+/* Título */
+.title {
+    font-size: 2em;
+    font-weight: bold;
+    text-align: center;
+    margin: 20px 0;
+}
+
+/* Produtos */
+div > div {
+    border-bottom: 1px solid #ddd;
+    padding: 10px;
+}
+
+.product-description {
+    display: inline-block;
+    font-size: 1.2em;
+    margin-right: 15px;
+}
+
+.product-price {
+    display: inline-block;
+    font-size: 1.2em;
+    margin-right: 15px;
+}
+
+.product-add-button {
+    background-color: #4CAF50;
+    border: none;
+    color: white;
+    padding: 10px 20px;
+    text-align: center;
+    text-decoration: none;
+    display: inline-block;
+    font-size: 1em;
+    margin: 5px;
+    cursor: pointer;
+    border-radius: 5px;
+}
+
+.product-add-button:hover {
+    background-color: #45a049;
+}
+
+/* Total */
+.total {
+    display: block;
+    font-size: 1.5em;
+    font-weight: bold;
+    text-align: right;
+    margin: 20px 0;
+}
+
+/* Itens do Pedido */
+.order-items > div {
+    border-bottom: 1px solid #ddd;
+    padding: 10px;
+}
+
+.item-description {
+    display: inline-block;
+    font-size: 1.2em;
+    margin-right: 15px;
+}
+
+.item-quantity {
+    display: inline-block;
+    font-size: 1.2em;
+    margin-right: 15px;
+}
+
+.item-increase-button,
+.item-decrease-button {
+    background-color: #008CBA;
+    border: none;
+    color: white;
+    padding: 10px 15px;
+    text-align: center;
+    text-decoration: none;
+    display: inline-block;
+    font-size: 1.2em;
+    margin: 5px;
+    cursor: pointer;
+    border-radius: 5px;
+}
+
+.item-increase-button:hover {
+    background-color: #007bb5;
+}
+
+.item-decrease-button:hover {
+    background-color: #005f73;
+}
+
+/* Botão Confirmar */
+.confirm {
+    background-color: #f44336;
+    border: none;
+    color: white;
+    padding: 15px 30px;
+    text-align: center;
+    text-decoration: none;
+    display: block;
+    font-size: 1.2em;
+    margin: 20px auto;
+    cursor: pointer;
+    border-radius: 5px;
+    width: 200px;
+}
+
+.confirm:hover {
+    background-color: #d32f2f;
+}
+
+/* Mensagem */
+.message {
+    font-size: 1.2em;
+    color: #333;
+    text-align: center;
+    margin: 20px 0;
+}
+
+/* Código do Pedido e Total do Pedido */
+.order-code,
+.order-total {
+    font-size: 1.5em;
+    font-weight: bold;
+    text-align: center;
+    margin: 10px 0;
+}

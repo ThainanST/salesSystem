@@ -22,6 +22,9 @@ psql -d <database> -U <username>
 \dn                       # Listgit ar schemas
 \d <schema>.<tableName>   # Mostrar detalhes de uma <tabela> de um <schema>
 
+Sequencia para visualizar dados
+psql -d app -U postgres      # digitar senha
+SELECT * FROM sales.order;   # fazer consulta 
 
 rabittMQ
 
@@ -37,4 +40,38 @@ JavaScript (sinon):
     "pacotes para TypeScript que não foram originalmente escritas em TypeScript."
 Python (unittest.mock): 
 C# (Moq)
+
+
+
+
+#######################
+FRONTEND
+#######################
+
+Vite é uma ferramenta moderna para desenvolvimento frontend que oferece rápida inicialização, Hot Module Replacement (HMR) e otimização de build usando ES modules.
+
+yarn create vite 
+yarn install
+yarn dev              # expoe o frontend
+yarn add vitest @vue/test-utils happy-dom
+yarn test             # roda os testes
+
+yarn add axios
+yarn add node-fetch
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 

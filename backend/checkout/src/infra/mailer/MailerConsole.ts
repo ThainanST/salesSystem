@@ -1,0 +1,7 @@
+import Mailer from './Mailer';
+
+export default class MailerConsole implements Mailer {
+    async send(email: string, subject: string, message: string) {
+        //console.log(email, subject, message);
+    }
+}

@@ -8,7 +8,14 @@ export default class HapiHttpServer implements HttpServer {
     constructor() {
         this.server = Hapi.server({
             port: 3000, // Defina a porta padrão ou mude conforme necessário
-            host: 'localhost'
+            host: 'localhost',
+            routes: {
+                cors: {
+                    origin: ['*'], // Permite todas as origens. Você pode restringir a origens específicas se necessário.
+                    headers: ['Accept', 'Authorization', 'Content-Type', 'If-None-Match'], // Adicione outros cabeçalhos que você deseja permitir.
+                    additionalHeaders: ['X-Requested-With']
+                }
+            }
         });
     }
 

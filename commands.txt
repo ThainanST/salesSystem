@@ -56,6 +56,9 @@ yarn dev              # expoe o frontend
 yarn add vitest @vue/test-utils happy-dom
 yarn test             # roda os testes
 
+yarn add axios
+yarn add node-fetch
+
 
 
 

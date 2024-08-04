@@ -11,7 +11,9 @@
   },
   "dependencies": {
     "@vue/test-utils": "^2.4.6",
+    "axios": "^1.7.3",
     "happy-dom": "^14.12.3",
+    "node-fetch": "^3.3.2",
     "vitest": "^2.0.5",
     "vue": "^3.4.31"
   },

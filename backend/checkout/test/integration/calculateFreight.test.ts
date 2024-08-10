@@ -28,7 +28,7 @@ test('Deve simular frete para um pedido sem ceps', async function () {
     const productData = new ProductDataDatabase();
     const calculateFreight = new CalculateFreight(productData, zipcodeDataFake);
     const output = await calculateFreight.execute(input);
-    expect(output).toBe(30);
+    expect(output.freight).toBe(30);
 });
 
 test('Deve simular frete para um pedido com ceps usando fake', async function () {
@@ -42,7 +42,7 @@ test('Deve simular frete para um pedido com ceps usando fake', async function ()
     const productData = new ProductDataDatabase();
     const calculateFreight = new CalculateFreight(productData, zipcodeDataFake);
     const output = await calculateFreight.execute(input);
-    expect(output).toBe(22.45);
+    expect(output.freight).toBe(22.45);
 });
 
 test('Deve simular frete para um pedido com ceps usando banco de dados', async function () {
@@ -58,5 +58,5 @@ test('Deve simular frete para um pedido com ceps usando banco de dados', async f
     const productData = new ProductDataDatabase();
     const calculateFreight = new CalculateFreight(productData, zipcodeData);
     const output = await calculateFreight.execute(input);
-    expect(output).toBe(22.45);
+    expect(output.freight).toBe(22.45);
 });

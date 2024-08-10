@@ -26,7 +26,7 @@ test("Deve fazer pedido com 3 produtos", async function () {
     };
     const response = await axios.post("http://localhost:3000/checkout", input);
     const output = response.data;
-    expect(output.total).toEqual(6350);
+    expect(output.total).toEqual(6370);
 });
 
 test("Deve fazer pedido com produto inexistente", async function () {
@@ -56,7 +56,7 @@ test("Deve fazer pedido com 3 produtos e aplicar cupom de desconto", async funct
     };
     const response = await axios.post("http://localhost:3000/checkout", input);
     const output = response.data;
-    expect(output.total).toEqual(5080);
+    expect(output.total).toEqual(5096);
 });
 
 test("Não deve aplicar cupom de desconto inválido", async function () {

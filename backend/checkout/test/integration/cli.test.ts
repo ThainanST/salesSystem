@@ -1,3 +1,4 @@
+import CalculateFreight from "../../src/application/CalculateFreight";
 import Checkout from "../../src/application/Checkout";
 import CouponData from "../../src/domain/data/CouponData";
 import OrderData from "../../src/domain/data/OrderData";
@@ -6,6 +7,7 @@ import Product from "../../src/domain/entities/Product";
 import CLIController from "../../src/infra/cli/CLIController";
 import CLIHandlerMemory from "../../src/infra/cli/CLIHandlerMemory";
 import OrderDataDatabase from "../../src/infra/data/OrderDataDatabase";
+import ZipcodeDataDatabase from "../../src/infra/data/ZipcodeDataDatabase";
 import PgpConnection from "../../src/infra/database/PgpConnection";
 import sinon from "sinon";
 
@@ -53,8 +55,9 @@ test("Deve testar o cli", async function () {
     }
 
     const connection = new PgpConnection();
-    const orderData = new OrderDataDatabase(connection);
-    const checkout = new Checkout(productDataFake, couponDataFake, orderDataFake);
+    const zipcodeData = new ZipcodeDataDatabase(connection);
+    const calculateFreight = new CalculateFreight(productDataFake, zipcodeData);
+    const checkout = new Checkout(productDataFake, couponDataFake, orderDataFake, calculateFreight);
     const handler = new CLIHandlerMemory();
     new CLIController(handler, checkout);
 

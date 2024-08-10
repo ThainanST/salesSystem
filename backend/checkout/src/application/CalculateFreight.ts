@@ -1,19 +1,19 @@
 import ProductData from "../domain/data/ProductData";
-import ZipCodeData from "../domain/data/ZipcodeData";
+import ZipcodeData from "../domain/data/ZipcodeData";
 import DistanceCalculator from "../domain/entities/DistanceCalculator";
 import FreightCalculator from "../domain/entities/FreightCalculator";
 
 export default class CalculateFreight {
 
-    constructor (readonly productData: ProductData, readonly zipCodeData: ZipCodeData) {
+    constructor (readonly productData: ProductData, readonly zipcodeData: ZipcodeData) {
 
     }
 
     async execute (input: any): Promise<any> {
         let distance;
         if (input.cepFrom && input.cepTo) {
-            const cepFrom = await this.zipCodeData.get(input.cepFrom);
-            const cepTo = await this.zipCodeData.get(input.cepTo);
+            const cepFrom = await this.zipcodeData.get(input.cepFrom);
+            const cepTo = await this.zipcodeData.get(input.cepTo);
             if (cepFrom && cepTo) {
                 distance = DistanceCalculator.calculate(cepFrom.coord, cepTo.coord);
             }
@@ -27,12 +27,24 @@ export default class CalculateFreight {
                 if (item.quantity <= 0) {
                     throw new Error('Quantity must be positive');
                 }
-                freight += freightCalculator.calculate(product, distance);
+                freight += freightCalculator.calculate(product, distance) * item.quantity;
             }
             else {
                 throw new Error('Product not found');
             }
         }
-        return freight;
+        return {
+            freight: freight
+        };
     }
 }
+
+type Input = {
+    cepFrom?: string;
+    cepTo?: string;
+    items: { idProduct: number, quantity: number }[];
+}
+
+type Output = {
+    freight: number;
+};

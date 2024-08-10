@@ -6,6 +6,9 @@ import Product from "../../src/domain/entities/Product";
 import QueueController from "../../src/infra/queue/QueueController";
 import sinon from "sinon";
 import QueueMemory from "../../src/infra/queue/QueueMemory";
+import CalculateFreight from "../../src/application/CalculateFreight";
+import ZipcodeDataDatabase from "../../src/infra/data/ZipcodeDataDatabase";
+import PgpConnection from "../../src/infra/database/PgpConnection";
 
 test("Deve fazer pedido com a fila", async function () {
 
@@ -53,7 +56,10 @@ test("Deve fazer pedido com a fila", async function () {
     
     const queue = new QueueMemory();
     await queue.connect();
-    const checkout = new Checkout(productDataFake, couponDataFake, orderDataFake);
+    const dbConnection = new PgpConnection();
+    const zipcodeData = new ZipcodeDataDatabase(dbConnection);
+    const calculateFreight = new CalculateFreight(productDataFake, zipcodeData);
+    const checkout = new Checkout(productDataFake, couponDataFake, orderDataFake, calculateFreight);
     const checkoutSpy = sinon.spy(checkout, "execute");
     new QueueController(queue, checkout);
 
@@ -70,6 +76,6 @@ test("Deve fazer pedido com a fila", async function () {
     const [returnedValue] = checkoutSpy.returnValues;
     const output = await returnedValue;
     expect(output.code).toBe("202400000002");
-    expect(output.total).toBe(6350);
+    expect(output.total).toBe(6370);
     checkoutSpy.restore();
 })

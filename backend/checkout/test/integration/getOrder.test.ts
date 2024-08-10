@@ -3,13 +3,20 @@ import CouponDataDatabase from "../../src/infra/data/CouponDataDatabase";
 import Checkout from "../../src/application/Checkout";
 import GetOrderByCpf from "../../src/application/GetOrderByCpf";
 import OrderDataDatabase from "../../src/infra/data/OrderDataDatabase";
+import CalculateFreight from "../../src/application/CalculateFreight";
+import PgpConnection from "../../src/infra/database/PgpConnection";
+import Zipcode from "../../src/domain/entities/Zipcode";
+import ZipcodeDataDatabase from "../../src/infra/data/ZipcodeDataDatabase";
 
 
 test("Deve consultar um pedido", async function () {
-    const productData = new ProductDataDatabase();
-    const couponData = new CouponDataDatabase();
-    const orderData = new OrderDataDatabase();
-    const checkout = new Checkout(productData, couponData, orderData);
+    const dbConnection = new PgpConnection();
+    const productData = new ProductDataDatabase(dbConnection);
+    const couponData = new CouponDataDatabase(dbConnection);
+    const orderData = new OrderDataDatabase(dbConnection);
+    const zipcodeData = new ZipcodeDataDatabase(dbConnection);
+    const calculateFreight = new CalculateFreight(productData, zipcodeData);
+    const checkout = new Checkout(productData, couponData, orderData, calculateFreight);
     const input = {
         cpf: "987.654.321-00",
         items: [

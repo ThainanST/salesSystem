@@ -47,9 +47,7 @@ export default class Order {
             currencyQuoteItem
         );
         this.items.push( newItem );
-        const freightCalculator = new FreightCalculator();
         this.subtotal += newItem.getTotal();
-        this.freight += freightCalculator.calculate(product);
     }
 
     addCoupon (coupon: Coupon) {

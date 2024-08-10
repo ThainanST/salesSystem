@@ -6,10 +6,10 @@ export default class FreightCalculator {
 
     }
 
-    calculate (product: Product): number {
+    calculate (product: Product, distance: number = 1000): number {
         const volume = product.getVolume();
         const density = product.getDensity();
-        const itemFreight = 1000 * volume * (density /100);
-        return itemFreight >= 10 ? itemFreight : 10;
+        const itemFreight = distance * volume * (density /100);
+        return itemFreight >= 10 ? Math.round(itemFreight*100)/100 : 10;
     }
 }

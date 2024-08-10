@@ -1,3 +1,4 @@
+drop table sales.zipcodes;
 drop table sales.order_items;
 drop table sales.products;
 drop table sales.coupons;

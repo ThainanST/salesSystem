@@ -14,3 +14,11 @@ test('Deve calcular o frete para um produto com valor mínimo', () => {
     const freight = freightCalculator.calculate(product);
     expect(freight).toBe(10);
 });
+
+test('Deve calcular o frete para um produto com distancia variável', () => {
+    const product = new Product(1, 'A', 1000, 100, 30, 10, 3);
+    const freightCalculator = new FreightCalculator();
+    const distance = 748.2217780081631;
+    const freight = freightCalculator.calculate(product, distance);
+    expect(freight).toBe(22.45);
+});

@@ -50,3 +50,15 @@ create table sales.order_items (
     quantity integer,
     primary key (id_order, id_product)
 );
+
+create table sales.zipcodes (
+    code text primary key,
+    street text,
+    neighborhood text,
+    lat numeric,
+    long numeric
+);
+
+insert into sales.zipcodes (code, street, neighborhood, lat, long) values
+    ('22030060', 'Rua 1', 'Centro', -27.5945, -48.5477),
+    ('88015600', 'Rua 2', 'Centro', -22.9129, -43.2003);

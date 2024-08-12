@@ -1,11 +1,10 @@
-import ProductData from "../domain/data/ProductData";
 import ZipcodeData from "../domain/data/ZipcodeData";
 import DistanceCalculator from "../domain/entities/DistanceCalculator";
 import FreightCalculator from "../domain/entities/FreightCalculator";
 
 export default class CalculateFreight {
 
-    constructor (readonly productData: ProductData, readonly zipcodeData: ZipcodeData) {
+    constructor (readonly zipcodeData: ZipcodeData) {
 
     }
 
@@ -18,20 +17,9 @@ export default class CalculateFreight {
                 distance = DistanceCalculator.calculate(cepFrom.coord, cepTo.coord);
             }
         }
-        const freightCalculator = new FreightCalculator();
-        const products = input.items;
         let freight = 0;
-        for (let item of products) {
-            const product = await this.productData.getProductById(item.idProduct);
-            if (product) {
-                if (item.quantity <= 0) {
-                    throw new Error('Quantity must be positive');
-                }
-                freight += freightCalculator.calculate(product, distance) * item.quantity;
-            }
-            else {
-                throw new Error('Product not found');
-            }
+        for (let item of input.items) {
+            freight += FreightCalculator.calculate(item.volume, item.density, distance) * item.quantity;
         }
         return {
             freight: freight
@@ -42,7 +30,7 @@ export default class CalculateFreight {
 type Input = {
     cepFrom?: string;
     cepTo?: string;
-    items: { idProduct: number, quantity: number }[];
+    items: { volume: number, density: number, quantity: number }[];
 }
 
 type Output = {

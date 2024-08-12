@@ -75,22 +75,6 @@ test("Não deve aplicar cupom de desconto inválido", async function () {
     expect(output.message).toBe("Coupon not found");
 });
 
-test.skip("Não deve aplicar cupom de desconto expirado", async function () {
-    const input = {
-        cpf: "987.654.321-00",
-        items: [
-            { idProduct: 1, quantity: 1 },
-            { idProduct: 2, quantity: 1 },
-            { idProduct: 3, quantity: 3 }
-        ],
-        coupon: "VALE20_EXPIRED"
-    };
-    const response = await axios.post("http://localhost:3000/checkout", input);
-    const output = response.data;
-    expect(output.total).toEqual(6350);
-    expect(output.message).toBe("Coupon expired");
-});
-
 test("Não deve fazer pedido com quantidade negativa", async function () {
     const input = {
         cpf: "987.654.321-00",

@@ -1,14 +1,10 @@
-import Product from "./Product";
-
 export default class FreightCalculator {
 
     constructor ( ) {
 
     }
 
-    calculate (product: Product, distance: number = 1000): number {
-        const volume = product.getVolume();
-        const density = product.getDensity();
+    static calculate (volume: number, density: number, distance: number = 1000): number {
         const itemFreight = distance * volume * (density /100);
         return itemFreight >= 10 ? Math.round(itemFreight*100)/100 : 10;
     }

@@ -3,7 +3,6 @@ import OrderCode from "./OrderCode";
 import Coupon from "./Coupon";
 import Cpf from "./Cpf";
 import Currencies from "./Currencies";
-import FreightCalculator from "./FreightCalculator";
 import Product from "./Product";
 
 export default class Order {

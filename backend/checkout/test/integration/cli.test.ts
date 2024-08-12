@@ -1,4 +1,3 @@
-import CalculateFreight from "../../src/application/CalculateFreight";
 import Checkout from "../../src/application/Checkout";
 import CouponData from "../../src/domain/data/CouponData";
 import OrderData from "../../src/domain/data/OrderData";
@@ -6,10 +5,8 @@ import ProductData from "../../src/domain/data/ProductData";
 import Product from "../../src/domain/entities/Product";
 import CLIController from "../../src/infra/cli/CLIController";
 import CLIHandlerMemory from "../../src/infra/cli/CLIHandlerMemory";
-import OrderDataDatabase from "../../src/infra/data/OrderDataDatabase";
-import ZipcodeDataDatabase from "../../src/infra/data/ZipcodeDataDatabase";
-import PgpConnection from "../../src/infra/database/PgpConnection";
 import sinon from "sinon";
+import FreightGatewayHttp from "../../src/infra/gateway/FreightGatewayHttp";
 
 test("Deve testar o cli", async function () {
     const productDataFake: ProductData = {
@@ -54,10 +51,8 @@ test("Deve testar o cli", async function () {
         }
     }
 
-    const connection = new PgpConnection();
-    const zipcodeData = new ZipcodeDataDatabase(connection);
-    const calculateFreight = new CalculateFreight(productDataFake, zipcodeData);
-    const checkout = new Checkout(productDataFake, couponDataFake, orderDataFake, calculateFreight);
+    const freightGateway = new FreightGatewayHttp();
+    const checkout = new Checkout(productDataFake, couponDataFake, orderDataFake, freightGateway);
     const handler = new CLIHandlerMemory();
     new CLIController(handler, checkout);
 

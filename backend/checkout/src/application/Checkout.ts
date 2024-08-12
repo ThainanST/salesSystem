@@ -8,7 +8,7 @@ import OrderDataDatabase from '../infra/data/OrderDataDatabase';
 import Order from '../domain/entities/Order';
 import ProductDataDatabase from '../infra/data/ProductDataDatabase';
 import CouponDataDatabase from '../infra/data/CouponDataDatabase';
-import CalculateFreight from './CalculateFreight';
+import FreightGateway from '../infra/gateway/FreightGateway';
 
 export default class Checkout {
 
@@ -16,7 +16,7 @@ export default class Checkout {
         readonly productData: ProductData = new ProductDataDatabase(),
         readonly couponData: CouponData = new CouponDataDatabase(),
         readonly orderData: OrderDataDatabase = new OrderDataDatabase(),
-        readonly CalculateFreight: CalculateFreight,
+        readonly freightGateway: FreightGateway,
         readonly currencyGateway: CurrencyGateway = new CurrencyGatewayRandom(),
         readonly mailer: Mailer = new MailerConsole(),
     ) {
@@ -27,12 +27,13 @@ export default class Checkout {
         const sequence = await this.orderData.count() + 1;
         const currenciesQuotes = await this.currencyGateway.getCurrencies();
         const order = new Order( input.cpf, new Date(), sequence, currenciesQuotes );
+        const freightItems: {volume: number, density: number, quantity: number}[] = [];
         for (let item of input.items) {
             const product = await this.productData.getProductById(item.idProduct);
             order.addItem(product, item.quantity);
+            freightItems.push({ volume: product.getVolume(), density: product.getDensity(), quantity: item.quantity} );
         }
-        const inputCalculateFreight = { cepFrom: input.cpfFrom, cepTo: input.cpfTo, items: input.items};
-        const freightOutput = await this.CalculateFreight.execute(inputCalculateFreight);
+        const freightOutput = await this.freightGateway.calculateFreight( freightItems, input.cpfFrom,input.cpfTo);
         order.freight = freightOutput.freight;
         if (input.coupon) {
             const coupon = await this.couponData.getCouponByCode(input.coupon);

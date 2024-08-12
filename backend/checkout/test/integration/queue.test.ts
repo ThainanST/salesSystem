@@ -6,9 +6,7 @@ import Product from "../../src/domain/entities/Product";
 import QueueController from "../../src/infra/queue/QueueController";
 import sinon from "sinon";
 import QueueMemory from "../../src/infra/queue/QueueMemory";
-import CalculateFreight from "../../src/application/CalculateFreight";
-import ZipcodeDataDatabase from "../../src/infra/data/ZipcodeDataDatabase";
-import PgpConnection from "../../src/infra/database/PgpConnection";
+import FreightGatewayHttp from "../../src/infra/gateway/FreightGatewayHttp";
 
 test("Deve fazer pedido com a fila", async function () {
 
@@ -56,10 +54,8 @@ test("Deve fazer pedido com a fila", async function () {
     
     const queue = new QueueMemory();
     await queue.connect();
-    const dbConnection = new PgpConnection();
-    const zipcodeData = new ZipcodeDataDatabase(dbConnection);
-    const calculateFreight = new CalculateFreight(productDataFake, zipcodeData);
-    const checkout = new Checkout(productDataFake, couponDataFake, orderDataFake, calculateFreight);
+    const freightGateway = new FreightGatewayHttp();
+    const checkout = new Checkout(productDataFake, couponDataFake, orderDataFake, freightGateway);
     const checkoutSpy = sinon.spy(checkout, "execute");
     new QueueController(queue, checkout);
 

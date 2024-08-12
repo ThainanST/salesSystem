@@ -11,23 +11,7 @@ import OrderDataDatabase from '../../src/infra/data/OrderDataDatabase';
 import OrderData from '../../src/domain/data/OrderData';
 import Currencies from '../../src/domain/entities/Currencies';
 import Product from '../../src/domain/entities/Product';
-import CalculateFreight from '../../src/application/CalculateFreight';
-import ZipcodeData from '../../src/domain/data/ZipcodeData';
-import Zipcode from '../../src/domain/entities/Zipcode';
-
-const zipcodeDataFake: ZipcodeData = {
-    get: function (code: string): Promise<Zipcode | undefined> {
-        if (code === '22030060') {
-            const zipCode = new Zipcode('22030060', '', '', -27.5945, -48.5477);
-            return Promise.resolve(zipCode);
-        }
-        if (code === '88015600') {
-            const zipCode = new Zipcode('88015600', '', '', -22.9129, -43.2003);
-            return Promise.resolve(zipCode);
-        }
-        return Promise.resolve(undefined);
-    }
-};
+import FreightGatewayHttp from '../../src/infra/gateway/FreightGatewayHttp';
 
 const productDataFake: ProductData = {
     async getProductById(idProduct: number): Promise<Product> {
@@ -62,8 +46,8 @@ test("Não deve criar pedido com cpf inválido", async function () {
         ]
     };
     const orderData = new OrderDataDatabase();
-    const calculateFreight = new CalculateFreight(productDataFake, zipcodeDataFake);
-    const checkout = new Checkout(productDataFake, couponDataFake, orderData, calculateFreight);
+    const freightGateway = new FreightGatewayHttp();
+    const checkout = new Checkout(productDataFake, couponDataFake, orderData, freightGateway);
     await expect(checkout.execute(input)).rejects.toThrow('Invalid cpf');
 });
 
@@ -78,8 +62,8 @@ test("Deve fazer pedido com 3 produtos", async function () {
     };
 
     const orderData = new OrderDataDatabase();
-    const calculateFreight = new CalculateFreight(productDataFake, zipcodeDataFake);
-    const checkout = new Checkout(productDataFake, couponDataFake, orderData, calculateFreight);
+    const freightGateway = new FreightGatewayHttp();
+    const checkout = new Checkout(productDataFake, couponDataFake, orderData, freightGateway);
     const output = await checkout.execute(input);
     expect(output.total).toEqual(6370);
 });
@@ -108,8 +92,8 @@ test("Deve fazer pedido com 4 produtos e moedas diferentes com stub e spy", asyn
         email: "thainan@mail.com",
     };
     const orderData = new OrderDataDatabase();
-    const calculateFreight = new CalculateFreight(productDataFake, zipcodeDataFake);
-    const checkout = new Checkout(productDataFake, couponDataFake, orderData, calculateFreight);
+    const freightGateway = new FreightGatewayHttp();
+    const checkout = new Checkout(productDataFake, couponDataFake, orderData, freightGateway);
     const output = await checkout.execute(input);
     expect(output.total).toEqual(6700);
     expect(mailerSpy.calledOnce).toBeTruthy();
@@ -154,8 +138,8 @@ test("Deve fazer pedido com 4 produtos e moedas diferentes com mock", async func
         email: "thainan@mail.com",
     };
     const orderData = new OrderDataDatabase();
-    const calculateFreight = new CalculateFreight(productDataFake, zipcodeDataFake);
-    const checkout = new Checkout(productDataFake, couponDataFake, orderData, calculateFreight);
+    const freightGateway = new FreightGatewayHttp();
+    const checkout = new Checkout(productDataFake, couponDataFake, orderData, freightGateway);
     const output = await checkout.execute(input);
     expect(output.total).toEqual(6700);
     currencyGatewayMock.verify();
@@ -194,9 +178,9 @@ test("Deve fazer pedido com 4 produtos e moedas diferentes com fake", async func
         ],
         email: "thainan@mail.com",
     };
-    const calculateFreight = new CalculateFreight(productDataFake, zipcodeDataFake);
     const orderData = new OrderDataDatabase();
-    const checkout = new Checkout(productDataFake, couponDataFake, orderData, calculateFreight, currencyGatewayFake, mailerFake);
+    const freightGateway = new FreightGatewayHttp();
+    const checkout = new Checkout(productDataFake, couponDataFake, orderData, freightGateway, currencyGatewayFake, mailerFake);
     const output = await checkout.execute(input);
     expect(output.total).toEqual(6700);
     expect(log).toHaveLength(1);
@@ -232,8 +216,8 @@ test("Deve fazer pedido com 3 produtos com código do pedido", async function ()
             return 1;
         }
     }
-    const calculateFreight = new CalculateFreight(productDataFake, zipcodeDataFake);
-    const checkout = new Checkout(productDataFake, couponDataFake, orderDataFake, calculateFreight);
+    const freightGateway = new FreightGatewayHttp();
+    const checkout = new Checkout(productDataFake, couponDataFake, orderDataFake, freightGateway);
     const output = await checkout.execute(input);
     expect(output.total).toEqual(6370);
     expect(output.code).toBe('202400000002');
@@ -254,8 +238,8 @@ test("Deve fazer pedido com 3 produtos com CEPs", async function () {
     const productData = new ProductDataDatabase();
     const couponData = new CouponDataDatabase();
     const orderData = new OrderDataDatabase();
-    const calculateFreight = new CalculateFreight(productData, zipcodeDataFake);
-    const checkout = new Checkout(productData, couponData, orderData, calculateFreight);
+    const freightGateway = new FreightGatewayHttp();
+    const checkout = new Checkout(productData, couponData, orderData, freightGateway);
     const output = await checkout.execute(input);
     expect(output.total).toEqual(6370);
 });

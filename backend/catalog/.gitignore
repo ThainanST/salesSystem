@@ -1,0 +1,28 @@
+# Logs
+logs
+*.log
+npm-debug.log*
+
+# Diretórios de dependências
+node_modules/
+
+# Diretório de build
+dist/
+build/
+
+# Arquivos de ambiente
+.env
+
+# Diretórios de IDEs e editores
+.vscode/
+.idea/
+
+# Diretórios de sistema operacional
+.DS_Store
+Thumbs.db
+
+# Cache do TypeScript
+*.tsbuildinfo
+
+# Saídas de teste
+coverage/

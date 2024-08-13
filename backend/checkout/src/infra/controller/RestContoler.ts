@@ -3,7 +3,7 @@ import HttpServer from "../http/HttpServer";
 
 export default class RestControler {
 
-    constructor(readonly httpServer: HttpServer, readonly checkout: Checkout, port: number = 3000) {
+    constructor(readonly httpServer: HttpServer, readonly checkout: Checkout) {
         
         httpServer.on('get', '/products', async function (params: any, body: any) {
             const output = [
@@ -16,7 +16,5 @@ export default class RestControler {
             const output = await checkout.execute(body);
             return output;
         })
-
-        httpServer.listen(port);
     }
 }

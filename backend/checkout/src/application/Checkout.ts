@@ -1,19 +1,18 @@
 import CouponData from '../domain/data/CouponData';
-import ProductData from '../domain/data/ProductData';
 import CurrencyGatewayRandom from '../infra/gateway/CurrencyGatewayRandom';
 import CurrencyGateway from '../infra/gateway/CurrencyGateway';
 import Mailer from '../infra/mailer/Mailer';
 import MailerConsole from '../infra/mailer/MailerConsole';
 import OrderDataDatabase from '../infra/data/OrderDataDatabase';
 import Order from '../domain/entities/Order';
-import ProductDataDatabase from '../infra/data/ProductDataDatabase';
 import CouponDataDatabase from '../infra/data/CouponDataDatabase';
 import FreightGateway from '../infra/gateway/FreightGateway';
+import CatalogGateway from '../infra/gateway/CatalogGateway';
 
 export default class Checkout {
 
     constructor (
-        readonly productData: ProductData = new ProductDataDatabase(),
+        readonly catalogGateway: CatalogGateway,
         readonly couponData: CouponData = new CouponDataDatabase(),
         readonly orderData: OrderDataDatabase = new OrderDataDatabase(),
         readonly freightGateway: FreightGateway,
@@ -29,7 +28,8 @@ export default class Checkout {
         const order = new Order( input.cpf, new Date(), sequence, currenciesQuotes );
         const freightItems: {volume: number, density: number, quantity: number}[] = [];
         for (let item of input.items) {
-            const product = await this.productData.getProductById(item.idProduct);
+            const product = await this.catalogGateway.getProduct(item.idProduct);
+            if (product === undefined) return { message: "Product not found"};
             order.addItem(product, item.quantity);
             freightItems.push({ volume: product.getVolume(), density: product.getDensity(), quantity: item.quantity} );
         }

@@ -13,6 +13,7 @@ CREATE DATABASE app;  # crie o banco de dados app
 \q                    # Sair do Ambiente psql
 
 psql -d app -f create.sql
+psql -d app -f drop.sql
 
 
 Comandos

@@ -1,6 +1,5 @@
 import sinon from 'sinon';
 import Checkout from "../../src/application/Checkout";
-import ProductData from "../../src/domain/data/ProductData";
 import CouponData from "../../src/domain/data/CouponData";
 import CouponDataDatabase from "../../src/infra/data/CouponDataDatabase";
 import CurrencyGateway from "../../src/infra/gateway/CurrencyGatewayRandom";
@@ -9,9 +8,13 @@ import Mailer from "../../src/infra/mailer/Mailer";
 import OrderDataDatabase from '../../src/infra/data/OrderDataDatabase';
 import OrderData from '../../src/domain/data/OrderData';
 import Currencies from '../../src/domain/entities/Currencies';
-import Product from '../../src/domain/entities/Product';
 import FreightGatewayHttp from '../../src/infra/gateway/FreightGatewayHttp';
 import CatalogGatewayHttp from '../../src/infra/gateway/CatalogGatewayHttp';
+import axios from 'axios';
+
+axios.defaults.validateStatus = function () {
+    return true;    
+};
 
 const couponDataFake: CouponData = {
     async getCouponByCode(code: string): Promise<any> {
@@ -238,7 +241,7 @@ test("Deve fazer pedido com 3 produtos com CEPs", async function () {
     expect(output.total).toEqual(6370);
 });
 
-test.skip("Deve fazer pedido com produto inexistente", async function () {
+test("Deve fazer pedido com produto inexistente", async function () {
     const input = {
         cpf: "987.654.321-00",
         items: [
@@ -253,7 +256,6 @@ test.skip("Deve fazer pedido com produto inexistente", async function () {
     const freightGateway = new FreightGatewayHttp();
     const catalogGateway = new CatalogGatewayHttp();
     const checkout = new Checkout(catalogGateway, couponData, orderData, freightGateway);
-    const output = await checkout.execute(input);
-    expect(output.message).toEqual("Product not found");
+    await expect( checkout.execute(input) ).rejects.toThrow('Product not found');
 
 })

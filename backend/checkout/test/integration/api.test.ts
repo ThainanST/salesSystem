@@ -1,6 +1,5 @@
 import axios from "axios";
 
-// Override axios to treat all HTTP responses as successful regardless of status code.
 axios.defaults.validateStatus = function () {
     return true;    
 };
@@ -29,7 +28,7 @@ test("Deve fazer pedido com 3 produtos", async function () {
     expect(output.total).toEqual(6370);
 });
 
-test.skip("Deve fazer pedido com produto inexistente", async function () {
+test("Deve fazer pedido com produto inexistente", async function () {
     const input = {
         cpf: "987.654.321-00",
         items: [
@@ -39,8 +38,8 @@ test.skip("Deve fazer pedido com produto inexistente", async function () {
         ]
     };
     const response = await axios.post("http://localhost:3000/checkout", input);
-    const output = response.data;
-    expect(output.message).toBe("Product not found");
+    expect(response.status).toBe(422);
+    expect(response.data.message).toBe("Product not found");
 });
 
 test("Deve fazer pedido com 3 produtos e aplicar cupom de desconto", async function () {

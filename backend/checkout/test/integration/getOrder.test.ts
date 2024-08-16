@@ -5,7 +5,11 @@ import OrderDataDatabase from "../../src/infra/data/OrderDataDatabase";
 import PgpConnection from "../../src/infra/database/PgpConnection";
 import FreightGatewayHttp from "../../src/infra/gateway/FreightGatewayHttp";
 import CatalogGatewayHttp from "../../src/infra/gateway/CatalogGatewayHttp";
+import axios from "axios";
 
+axios.defaults.validateStatus = function () {
+    return true;    
+};
 
 test("Deve consultar um pedido", async function () {
     const dbConnection = new PgpConnection();

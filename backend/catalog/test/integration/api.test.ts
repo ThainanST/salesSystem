@@ -19,4 +19,29 @@ test('Deve retornar um produto', async function () {
     expect(product.currency).toBe("BRL");
     expect(product.volume).toBe(0.03);
     expect(product.density).toBe(100);
-})
+});
+
+
+test('Deve retornar um erro ao tentar buscar um produto inexistente', async function () {
+    await expect(axios.get("http://localhost:3002/product/99"))
+        .rejects
+        .toMatchObject({
+            response: {
+                status: 422,
+                data: {
+                    message: 'Product not found'
+                }
+            }
+        });
+});
+
+test('Deve retornar uma lista de produtos', async function () {
+    const list = [1, 2, 3];
+
+    for (const idProduct of list) {
+        let response = await axios.get(`http://localhost:3002/product/${idProduct}`);
+        let product = response.data;
+        expect(product.idProduct).toBe(idProduct);
+    }
+
+});

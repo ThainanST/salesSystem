@@ -1,5 +1,6 @@
 rodar testes
     npx jest --watchAll
+    npx jest --runInBand
 
 rodar server
     npx nodemon src/main.ts

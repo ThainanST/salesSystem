@@ -1,15 +1,15 @@
 import Checkout from "../../src/application/Checkout";
 import CouponData from "../../src/domain/data/CouponData";
 import OrderData from "../../src/domain/data/OrderData";
-import ProductData from "../../src/domain/data/ProductData";
 import Product from "../../src/domain/entities/Product";
-import CLIController from "../../src/infra/cli/CLIController";
-import CLIHandlerMemory from "../../src/infra/cli/CLIHandlerMemory";
+import QueueController from "../../src/infra/queue/QueueController";
 import sinon from "sinon";
+import QueueMemory from "../../src/infra/queue/QueueMemory";
 import FreightGatewayHttp from "../../src/infra/gateway/FreightGatewayHttp";
 import CatalogGatewayHttp from "../../src/infra/gateway/CatalogGatewayHttp";
 
-test("Deve testar o cli", async function () {    
+test("Deve fazer pedido com a fila", async function () {
+    
     const couponDataFake: CouponData = {
         async getCouponByCode(code: string): Promise<any> {
             const coupons: any = {
@@ -39,20 +39,28 @@ test("Deve testar o cli", async function () {
             return 1;
         }
     }
-
+    
+    const queue = new QueueMemory();
+    await queue.connect();
     const freightGateway = new FreightGatewayHttp();
     const catalogGateway = new CatalogGatewayHttp();
     const checkout = new Checkout(catalogGateway, couponDataFake, orderDataFake, freightGateway);
-    const handler = new CLIHandlerMemory();
-    new CLIController(handler, checkout);
-
     const checkoutSpy = sinon.spy(checkout, "execute");
-    await handler.type("set-cpf 123.456.789-09");
-    await handler.type("add-item 1 1");
-    await handler.type("checkout");
+    new QueueController(queue, checkout);
+
+    const input = {
+        cpf: "987.654.321-00",
+        items: [
+            { idProduct: 1, quantity: 1 },
+            { idProduct: 2, quantity: 1 },
+            { idProduct: 3, quantity: 3 }
+        ]
+    };
+    await queue.publish("checkout", input);
+
     const [returnedValue] = checkoutSpy.returnValues;
     const output = await returnedValue;
     expect(output.code).toBe("202400000002");
-    expect(output.total).toBe(1030);
+    expect(output.total).toBe(6370);
     checkoutSpy.restore();
-});
+})

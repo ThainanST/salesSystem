@@ -1,6 +1,10 @@
-import { Axios, AxiosError } from "axios";
+import axios from "axios";
 import Product from "../../src/domain/entities/Product";
 import CatalogGatewayHttp from "../../src/infra/gateway/CatalogGatewayHttp";
+
+axios.defaults.validateStatus = function () {
+    return true;    
+};
 
 test('Deve consultar produto', async function () {
     const catalogGateway = new CatalogGatewayHttp();
@@ -18,13 +22,29 @@ test('Deve consultar produto', async function () {
 
 test('Deve consultar produto inexistente', async function () {
     const catalogGateway = new CatalogGatewayHttp();
-    try {
-        const response = await catalogGateway.getProduct(99);
-    } catch (error: any) {
-        expect(error.response.status).toBe(422);
-        expect(error.response.data.message).toBe('Product not found');
-    }
-
-    // await expect( catalogGateway.getProduct(99) ).rejects.toThrow('Product not found');
+    await expect( catalogGateway.getProduct(99) ).rejects.toThrow('Product not found');
       
+});
+
+
+test('Deve consultar uma lista de produtos', async function () {
+    const catalogGateway = new CatalogGatewayHttp();
+    const list = [1, 2, 3, 4];
+    for (const idProduct of list) {
+        let product: Product = await catalogGateway.getProduct(idProduct);
+        expect(product.idProduct).toBe(idProduct);
+    } 
+});
+
+test('Deve consultar uma lista de produtos, com um deles inexistente', async function () {
+    const catalogGateway = new CatalogGatewayHttp();
+    const list = [1, 2, 99, 4];
+    for (const idProduct of list) {
+        if (idProduct === 99) {
+            await expect( catalogGateway.getProduct(99) ).rejects.toThrow('Product not found');
+            continue;
+        }
+        let product: Product = await catalogGateway.getProduct(idProduct);
+        expect(product.idProduct).toBe(idProduct);
+    } 
 });

@@ -2,6 +2,10 @@ import axios from "axios";
 import CatalogGateway from "./CatalogGateway";
 import Product from "../../domain/entities/Product";
 
+axios.defaults.validateStatus = function () {
+    return true;    
+};
+
 export default class CatalogGatewayHttp implements CatalogGateway {
     async getProduct(idProduct: number): Promise<any> {
         const response = await axios.get(`http://localhost:3002/product/${idProduct}`);

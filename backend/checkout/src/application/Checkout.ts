@@ -28,8 +28,7 @@ export default class Checkout {
         const order = new Order( input.cpf, new Date(), sequence, currenciesQuotes );
         const freightItems: {volume: number, density: number, quantity: number}[] = [];
         for (let item of input.items) {
-            const product = await this.catalogGateway.getProduct(item.idProduct);
-            if (product === undefined) return { message: "Product not found"};
+            let product = await this.catalogGateway.getProduct(item.idProduct);
             order.addItem(product, item.quantity);
             freightItems.push({ volume: product.getVolume(), density: product.getDensity(), quantity: item.quantity} );
         }

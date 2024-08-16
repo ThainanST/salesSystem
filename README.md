@@ -128,3 +128,14 @@ preço: R$400,00 (1000 * 1 * (40/100))
 ### Testes
 
 ### Considere
+
+## Parte 7, Aula 7
+
+### Escopo
+1. Deve reduzir o estoque ao realizar o pedido de um item
+2. Deve aumentar o estoque ao cancelar um pedido
+3. Coloque o estoque em um bounded context
+
+### Testes
+
+### Considere

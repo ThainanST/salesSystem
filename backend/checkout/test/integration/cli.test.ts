@@ -1,28 +1,13 @@
 import Checkout from "../../src/application/Checkout";
 import CouponData from "../../src/domain/data/CouponData";
 import OrderData from "../../src/domain/data/OrderData";
-import ProductData from "../../src/domain/data/ProductData";
-import Product from "../../src/domain/entities/Product";
-import QueueController from "../../src/infra/queue/QueueController";
+import CLIController from "../../src/infra/cli/CLIController";
+import CLIHandlerMemory from "../../src/infra/cli/CLIHandlerMemory";
 import sinon from "sinon";
-import QueueMemory from "../../src/infra/queue/QueueMemory";
 import FreightGatewayHttp from "../../src/infra/gateway/FreightGatewayHttp";
 import CatalogGatewayHttp from "../../src/infra/gateway/CatalogGatewayHttp";
 
-test("Deve fazer pedido com a fila", async function () {
-
-    const productDataFake: ProductData = {
-        async getProductById(idProduct: number): Promise<Product> {
-                const products: { [idProduct: number] : Product } = {
-                    1: new Product( 1, 'A', 1000, 100, 30, 10, 3, 'BRL'),
-                    2: new Product( 2, 'B', 5000, 50, 50, 50, 22, 'BRL'),
-                    3: new Product( 3, 'C', 30, 10, 10, 10, 0.9, 'BRL'),
-                    4: new Product( 4, 'D', 100, 100, 30, 10, 3, 'USD'),
-                };
-                return products[idProduct];
-            }
-    }
-    
+test("Deve testar o cli", async function () {    
     const couponDataFake: CouponData = {
         async getCouponByCode(code: string): Promise<any> {
             const coupons: any = {
@@ -52,28 +37,20 @@ test("Deve fazer pedido com a fila", async function () {
             return 1;
         }
     }
-    
-    const queue = new QueueMemory();
-    await queue.connect();
+
     const freightGateway = new FreightGatewayHttp();
     const catalogGateway = new CatalogGatewayHttp();
     const checkout = new Checkout(catalogGateway, couponDataFake, orderDataFake, freightGateway);
+    const handler = new CLIHandlerMemory();
+    new CLIController(handler, checkout);
+
     const checkoutSpy = sinon.spy(checkout, "execute");
-    new QueueController(queue, checkout);
-
-    const input = {
-        cpf: "987.654.321-00",
-        items: [
-            { idProduct: 1, quantity: 1 },
-            { idProduct: 2, quantity: 1 },
-            { idProduct: 3, quantity: 3 }
-        ]
-    };
-    await queue.publish("checkout", input);
-
+    await handler.type("set-cpf 123.456.789-09");
+    await handler.type("add-item 1 1");
+    await handler.type("checkout");
     const [returnedValue] = checkoutSpy.returnValues;
     const output = await returnedValue;
     expect(output.code).toBe("202400000002");
-    expect(output.total).toBe(6370);
+    expect(output.total).toBe(1030);
     checkoutSpy.restore();
-})
+});

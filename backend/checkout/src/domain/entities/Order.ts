@@ -3,7 +3,6 @@ import OrderCode from "./OrderCode";
 import Coupon from "./Coupon";
 import Cpf from "./Cpf";
 import Currencies from "./Currencies";
-import FreightCalculator from "./FreightCalculator";
 import Product from "./Product";
 
 export default class Order {
@@ -47,9 +46,7 @@ export default class Order {
             currencyQuoteItem
         );
         this.items.push( newItem );
-        const freightCalculator = new FreightCalculator();
         this.subtotal += newItem.getTotal();
-        this.freight += freightCalculator.calculate(product);
     }
 
     addCoupon (coupon: Coupon) {

@@ -1,27 +1,13 @@
 import Checkout from "../../src/application/Checkout";
 import CouponData from "../../src/domain/data/CouponData";
 import OrderData from "../../src/domain/data/OrderData";
-import ProductData from "../../src/domain/data/ProductData";
-import Product from "../../src/domain/entities/Product";
 import CLIController from "../../src/infra/cli/CLIController";
 import CLIHandlerMemory from "../../src/infra/cli/CLIHandlerMemory";
-import OrderDataDatabase from "../../src/infra/data/OrderDataDatabase";
-import PgpConnection from "../../src/infra/database/PgpConnection";
 import sinon from "sinon";
+import FreightGatewayHttp from "../../src/infra/gateway/FreightGatewayHttp";
+import CatalogGatewayHttp from "../../src/infra/gateway/CatalogGatewayHttp";
 
-test("Deve testar o cli", async function () {
-    const productDataFake: ProductData = {
-        async getProductById(idProduct: number): Promise<Product> {
-                const products: { [idProduct: number] : Product } = {
-                    1: new Product( 1, 'A', 1000, 100, 30, 10, 3, 'BRL'),
-                    2: new Product( 2, 'B', 5000, 50, 50, 50, 22, 'BRL'),
-                    3: new Product( 3, 'C', 30, 10, 10, 10, 0.9, 'BRL'),
-                    4: new Product( 4, 'D', 100, 100, 30, 10, 3, 'USD'),
-                };
-                return products[idProduct];
-            }
-    }
-    
+test("Deve testar o cli", async function () {    
     const couponDataFake: CouponData = {
         async getCouponByCode(code: string): Promise<any> {
             const coupons: any = {
@@ -52,9 +38,9 @@ test("Deve testar o cli", async function () {
         }
     }
 
-    const connection = new PgpConnection();
-    const orderData = new OrderDataDatabase(connection);
-    const checkout = new Checkout(productDataFake, couponDataFake, orderDataFake);
+    const freightGateway = new FreightGatewayHttp();
+    const catalogGateway = new CatalogGatewayHttp();
+    const checkout = new Checkout(catalogGateway, couponDataFake, orderDataFake, freightGateway);
     const handler = new CLIHandlerMemory();
     new CLIController(handler, checkout);
 

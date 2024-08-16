@@ -1,21 +1,21 @@
-import { validate } from '../domain/entities/CpfValidator';
 import CouponData from '../domain/data/CouponData';
-import ProductData from '../domain/data/ProductData';
 import CurrencyGatewayRandom from '../infra/gateway/CurrencyGatewayRandom';
 import CurrencyGateway from '../infra/gateway/CurrencyGateway';
 import Mailer from '../infra/mailer/Mailer';
 import MailerConsole from '../infra/mailer/MailerConsole';
 import OrderDataDatabase from '../infra/data/OrderDataDatabase';
 import Order from '../domain/entities/Order';
-import ProductDataDatabase from '../infra/data/ProductDataDatabase';
 import CouponDataDatabase from '../infra/data/CouponDataDatabase';
+import FreightGateway from '../infra/gateway/FreightGateway';
+import CatalogGateway from '../infra/gateway/CatalogGateway';
 
 export default class Checkout {
 
     constructor (
-        readonly productData: ProductData = new ProductDataDatabase(),
+        readonly catalogGateway: CatalogGateway,
         readonly couponData: CouponData = new CouponDataDatabase(),
         readonly orderData: OrderDataDatabase = new OrderDataDatabase(),
+        readonly freightGateway: FreightGateway,
         readonly currencyGateway: CurrencyGateway = new CurrencyGatewayRandom(),
         readonly mailer: Mailer = new MailerConsole(),
     ) {
@@ -25,16 +25,15 @@ export default class Checkout {
     async execute (input: Input) {
         const sequence = await this.orderData.count() + 1;
         const currenciesQuotes = await this.currencyGateway.getCurrencies();
-        const order = new Order(
-            input.cpf,
-            new Date(),
-            sequence,
-            currenciesQuotes
-        );
+        const order = new Order( input.cpf, new Date(), sequence, currenciesQuotes );
+        const freightItems: {volume: number, density: number, quantity: number}[] = [];
         for (let item of input.items) {
-            const product = await this.productData.getProductById(item.idProduct);
+            let product = await this.catalogGateway.getProduct(item.idProduct);
             order.addItem(product, item.quantity);
+            freightItems.push({ volume: product.getVolume(), density: product.getDensity(), quantity: item.quantity} );
         }
+        const freightOutput = await this.freightGateway.calculateFreight( freightItems, input.cpfFrom,input.cpfTo);
+        order.freight = freightOutput.freight;
         if (input.coupon) {
             const coupon = await this.couponData.getCouponByCode(input.coupon);
             order.addCoupon(coupon);
@@ -53,6 +52,8 @@ export default class Checkout {
 }
 
 type Input = {
+    cpfFrom?: string;
+    cpfTo?: string;
     cpf: string;
     items: {idProduct: number, quantity: number}[];
     coupon?: string;

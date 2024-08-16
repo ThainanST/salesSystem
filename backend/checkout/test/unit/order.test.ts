@@ -16,6 +16,7 @@ test('Deve fazer uma ordem com 3 itens', function () {
     order.addItem(new Product(1, 'A', 1000, 100, 30, 10, 3, 'BRL'), 1);
     order.addItem(new Product(2, 'B', 5000, 50,  50, 50, 22, 'BRL'), 1);
     order.addItem(new Product(3, 'C', 30,   10,  10, 10, 0.9, 'BRL'), 3);
+    order.freight = 260;
     expect(order.getTotal()).toBe(6350);
 });
 
@@ -24,6 +25,7 @@ test('Deve fazer uma ordem com 3 itens + coupon', function () {
     order.addItem(new Product(1, 'A', 1000, 100, 30, 10, 3, 'BRL'), 1);
     order.addItem(new Product(2, 'B', 5000, 50,  50, 50, 22, 'BRL'), 1);
     order.addItem(new Product(3, 'C', 30,   10,  10, 10, 0.9, 'BRL'), 3);
+    order.freight = 260;
     order.addCoupon(new Coupon('VALE20', 0.2, new Date('2024-10-01T10:00:00')));
     expect(order.getTotal()).toBe(5080);
 });

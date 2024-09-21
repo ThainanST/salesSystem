@@ -1,3 +1,4 @@
+drop table sales.stock_entry;
 drop table sales.zipcodes;
 drop table sales.order_items;
 drop table sales.products;
